@@ -1,0 +1,33 @@
+{
+  "name": "kg-bot/laravel-rackbeat",
+  "description": "Laravel Integration With Rackbeat App",
+  "authors": [
+      {
+          "name": "Stefan Ninic",
+          "email": "ninicstefan94@gmail.com"
+      }
+  ],
+  "require": {
+
+      "php": ">=7.1",
+      "laravel/framework": "^5.5",
+      "guzzlehttp/guzzle": "*"
+  },
+  "autoload": {
+
+      "psr-4": {
+
+          "Rackbeat\\": "src/"
+      }
+  },
+  "extra":{
+
+    "laravel":{
+
+      "providers":[
+
+        "Rackbeat\\RackbeatServiceProvider"
+      ]
+    }
+  }
+}
