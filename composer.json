@@ -1,6 +1,7 @@
 {
   "name": "kg-bot/laravel-rackbeat",
   "description": "Laravel Integration With Rackbeat App",
+  "license": "MIT",
   "authors": [
       {
           "name": "Stefan Ninic",
