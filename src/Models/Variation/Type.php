@@ -15,9 +15,9 @@ use Rackbeat\Utils\Request;
 
 class Type extends Model
 {
-    public    $number;
+    public    $id;
     protected $entity          = 'variations/:variation_number/types';
-    protected $primaryKey      = 'number';
+    protected $primaryKey      = 'id';
     protected $typeOptionModel = TypeOption::class;
 
     public function __construct( Request $request, $data = [] )
