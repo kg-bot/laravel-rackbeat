@@ -99,6 +99,18 @@ class Builder
         } );
     }
 
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
+    public function setEntity( $new_entity )
+    {
+        $this->entity = $new_entity;
+
+        return $this->entity;
+    }
+
     private function escapeFilter( $variable )
     {
         $escapedStrings    = [

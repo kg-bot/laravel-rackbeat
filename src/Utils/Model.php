@@ -85,6 +85,16 @@ class Model
         } );
     }
 
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
+    public function setEntity( $new_entity )
+    {
+        $this->entity = $new_entity;
+    }
+
     protected function setAttribute( $attribute, $value )
     {
         $this->{$attribute} = $value;

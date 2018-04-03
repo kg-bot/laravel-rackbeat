@@ -39,11 +39,12 @@ class Product extends Model
 
     }
 
-    public function stock()
+    public function variations( $variation_id = 1001 )
     {
-        return $this->request->handleWithExceptions( function () {
+        return $this->request->handleWithExceptions( function () use ( $variation_id ) {
 
-            $response = $this->request->client->get( "{$this->entity}/{$this->{$this->primaryKey}}/stock_quantity" );
+            $response = $this->request->client->get( "variations/{$this->{$this->primaryKey}}/variation-matrix" .
+                                                     $filter );
 
             $html = $response->getBody()->getContents();
 
