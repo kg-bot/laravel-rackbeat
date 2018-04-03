@@ -14,6 +14,6 @@ use Rackbeat\Models\Variation\TypeOption;
 class TypeOptionBuilder extends Builder
 {
 
-    protected $entity = 'variations/:variation_id/types/:type_number/options';
+    protected $entity = 'variations/:variation_number/types/:type_number/options';
     protected $model  = TypeOption::class;
 }

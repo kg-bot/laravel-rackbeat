@@ -14,6 +14,6 @@ use Rackbeat\Models\Variation\Type as TypeModel;
 class TypeBuilder extends Builder
 {
 
-    protected $entity = 'variations/:variation_id/types';
+    protected $entity = 'variations/:variation_number/types';
     protected $model  = TypeModel::class;
 }
