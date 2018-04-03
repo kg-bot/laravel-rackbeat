@@ -24,7 +24,7 @@ class Type extends Model
     {
         parent::__construct( $request, $data );
 
-        str_replace( ':variation_number', $this->variation_id, $this->entity );
+        $this->entity = str_replace( ':variation_number', $this->variation_id, $this->entity );
     }
 
     public function options()
