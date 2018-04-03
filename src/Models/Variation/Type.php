@@ -20,7 +20,7 @@ class Type extends Model
     protected $primaryKey      = 'number';
     protected $typeOptionModel = TypeOption::class;
 
-    public function __construct( Request $request, array $data = [] )
+    public function __construct( Request $request, $data = [] )
     {
         parent::__construct( $request, $data );
 

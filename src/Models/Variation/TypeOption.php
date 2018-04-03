@@ -18,7 +18,7 @@ class TypeOption extends Model
     protected $entity     = 'variations/:variation_number/types/:type_number/options';
     protected $primaryKey = 'number';
 
-    public function __construct( Request $request, array $data = [] )
+    public function __construct( Request $request, $data = [] )
     {
         parent::__construct( $request, $data );
 
