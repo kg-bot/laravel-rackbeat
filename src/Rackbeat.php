@@ -10,6 +10,7 @@ namespace Rackbeat;
 
 
 use Rackbeat\Builders\LocationBuilder;
+use Rackbeat\Builders\OrderBuilder;
 use Rackbeat\Builders\ProductBuilder;
 use Rackbeat\Builders\SupplierBuilder;
 use Rackbeat\Builders\Variation\VariationBuilder;
@@ -42,6 +43,11 @@ class Rackbeat
     public function variations()
     {
         return new VariationBuilder( $this->request );
+    }
+
+    public function orders()
+    {
+        return new OrderBuilder( $this->request );
     }
 
     private function initRequest()
