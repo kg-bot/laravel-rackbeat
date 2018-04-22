@@ -51,4 +51,15 @@ class Product extends Model
             return $html;
         } );
     }
+
+    public function location()
+    {
+        return $this->request->handleWithExceptions( function () {
+
+            $response = $this->request->client->get( "{$this->entity}/{$this->{$this->primaryKey}}/locations" );
+
+            return collect( json_decode( $response->getBody()->getContents() )->product_locations );
+
+        } );
+    }
 }
