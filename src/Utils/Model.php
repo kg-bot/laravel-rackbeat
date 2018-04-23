@@ -41,6 +41,11 @@ class Model
         }
     }
 
+    protected function setAttribute( $attribute, $value )
+    {
+        $this->{$attribute} = $value;
+    }
+
     public function __toString()
     {
         return json_encode( $this->toArray() );
@@ -65,7 +70,7 @@ class Model
     {
         return $this->request->handleWithExceptions( function () {
 
-            return $this->request->client->delete( "/{$this->entity}/{$this->{$this->primaryKey}}" );
+            return $this->request->client->delete( "{$this->entity}/{$this->{$this->primaryKey}}" );
         } );
     }
 
@@ -93,10 +98,5 @@ class Model
     public function setEntity( $new_entity )
     {
         $this->entity = $new_entity;
-    }
-
-    protected function setAttribute( $attribute, $value )
-    {
-        $this->{$attribute} = $value;
     }
 }
