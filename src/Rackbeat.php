@@ -9,6 +9,7 @@
 namespace Rackbeat;
 
 
+use Rackbeat\Builders\CustomerBuilder;
 use Rackbeat\Builders\LocationBuilder;
 use Rackbeat\Builders\OrderBuilder;
 use Rackbeat\Builders\ProductBuilder;
@@ -23,6 +24,11 @@ class Rackbeat
     public function __construct( $token = null )
     {
         $this->initRequest();
+    }
+
+    private function initRequest()
+    {
+        $this->request = new Request();
     }
 
     public function suppliers()
@@ -50,8 +56,8 @@ class Rackbeat
         return new OrderBuilder( $this->request );
     }
 
-    private function initRequest()
+    public function customers()
     {
-        $this->request = new Request();
+        return new CustomerBuilder( $this->request );
     }
 }
