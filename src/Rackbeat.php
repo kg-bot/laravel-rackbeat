@@ -16,6 +16,7 @@ use Rackbeat\Builders\InventoryMovementBuilder;
 use Rackbeat\Builders\LocationBuilder;
 use Rackbeat\Builders\OrderBuilder;
 use Rackbeat\Builders\ProductBuilder;
+use Rackbeat\Builders\ProductGroupBuilder;
 use Rackbeat\Builders\SupplierBuilder;
 use Rackbeat\Builders\Variation\VariationBuilder;
 use Rackbeat\Utils\Request;
@@ -47,6 +48,11 @@ class Rackbeat
     public function products()
     {
         return new ProductBuilder( $this->request );
+    }
+
+    public function productGroups()
+    {
+        return new ProductGroupBuilder( $this->request );
     }
 
     public function variations()
