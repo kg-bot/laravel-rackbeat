@@ -62,4 +62,20 @@ class Product extends Model
 
         } );
     }
+
+    /**
+     * Show reporting ledger for desired product https://app.rackbeat.com/reporting/ledger/{product_number}
+     * API docs: https://rackbeat.docs.apiary.io/#reference/inventory-reports/show
+     */
+    public function ledger()
+    {
+        return $this->request->handleWithExceptions( function () {
+
+            $response =
+                $this->request->client->get( "inventory-reports/inventory-ledger/{$this->{ $this->primaryKey } }" );
+
+            return collect( json_decode( $response->getBody()->getContents() )->ledger_items );
+
+        } );
+    }
 }
