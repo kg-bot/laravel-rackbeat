@@ -13,6 +13,6 @@ use Rackbeat\Models\InventoryAdjustment;
 
 class InventoryAdjustmentBuilder extends Builder
 {
-    protected $entity = 'inventory-adjustment';
+    protected $entity = 'inventory-adjustments';
     protected $model  = InventoryAdjustment::class;
 }

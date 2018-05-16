@@ -13,6 +13,6 @@ use Rackbeat\Utils\Model;
 
 class InventoryAdjustment extends Model
 {
-    protected $entity     = 'inventory-adjustment';
+    protected $entity     = 'inventory-adjustments';
     protected $primaryKey = 'id';
 }

@@ -13,6 +13,6 @@ use Rackbeat\Models\InventoryMovement;
 
 class InventoryMovementBuilder extends Builder
 {
-    protected $entity = 'inventory-movement';
+    protected $entity = 'inventory-movements';
     protected $model  = InventoryMovement::class;
 }
