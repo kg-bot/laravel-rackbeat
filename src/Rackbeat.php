@@ -27,12 +27,12 @@ class Rackbeat
 
     public function __construct( $token = null )
     {
-        $this->initRequest();
+        $this->initRequest( $token );
     }
 
-    private function initRequest()
+    private function initRequest( $token )
     {
-        $this->request = new Request();
+        $this->request = new Request( $token );
     }
 
     public function suppliers()

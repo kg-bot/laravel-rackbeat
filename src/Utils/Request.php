@@ -9,17 +9,17 @@
 namespace Rackbeat\Utils;
 
 
-use Rackbeat\Exceptions\RackbeatClientException;
-use Rackbeat\Exceptions\RackbeatRequestException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
+use Rackbeat\Exceptions\RackbeatClientException;
+use Rackbeat\Exceptions\RackbeatRequestException;
 
 class Request
 {
     public $client;
 
-    public function __construct()
+    public function __construct( $token = null )
     {
         $this->client = new Client( [
 
@@ -28,7 +28,7 @@ class Request
 
                 'Accept'        => 'application/json',
                 'Content-Type'  => 'application/json',
-                'Authorization' => 'Bearer ' . config( 'rackbeat.token' ),
+                'Authorization' => 'Bearer ' . $token ?? config( 'rackbeat.token' ),
             ],
         ] );
     }
