@@ -14,6 +14,7 @@ use Rackbeat\Builders\CustomerGroupBuilder;
 use Rackbeat\Builders\InventoryAdjustmentBuilder;
 use Rackbeat\Builders\InventoryMovementBuilder;
 use Rackbeat\Builders\LocationBuilder;
+use Rackbeat\Builders\LotBuilder;
 use Rackbeat\Builders\OrderBuilder;
 use Rackbeat\Builders\ProductBuilder;
 use Rackbeat\Builders\ProductGroupBuilder;
@@ -48,6 +49,11 @@ class Rackbeat
     public function products()
     {
         return new ProductBuilder( $this->request );
+    }
+
+    public function lots()
+    {
+        return new LotBuilder( $this->request );
     }
 
     public function productGroups()
