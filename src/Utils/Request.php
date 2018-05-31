@@ -21,6 +21,7 @@ class Request
 
     public function __construct( $token = null )
     {
+        $token        = $token ?? config( 'rackbeat.token' );
         $this->client = new Client( [
 
             'base_uri' => 'https://app.rackbeat.com/api/',
@@ -28,7 +29,7 @@ class Request
 
                 'Accept'        => 'application/json',
                 'Content-Type'  => 'application/json',
-                'Authorization' => 'Bearer ' . ( !is_null( $token ) ) ? $token : config( 'rackbeat.token' ),
+                'Authorization' => 'Bearer ' . $token,
             ],
         ] );
     }
