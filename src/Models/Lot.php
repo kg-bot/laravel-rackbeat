@@ -17,34 +17,11 @@ class Lot extends Model
     protected $entity     = 'lots';
     protected $primaryKey = 'number';
 
-    public function inventoryMatrix( $location_id = null )
-    {
-        return $this->request->handleWithExceptions( function () use ( $location_id ) {
-
-            $filter = '';
-
-            // We need to use location filter if user has provided any
-            if ( !is_null( $location_id ) ) {
-
-                $filter .= '?location_id=' . $location_id;
-            }
-
-            $response = $this->request->client->get( "{$this->entity}/{$this->{$this->primaryKey}}/variation-matrix" .
-                                                     $filter );
-
-            $html = $response->getBody()->getContents();
-
-            return $html;
-        } );
-
-    }
-
     public function variations( $variation_id = 1001 )
     {
         return $this->request->handleWithExceptions( function () use ( $variation_id ) {
 
-            $response = $this->request->client->get( "variations/{$this->{$this->primaryKey}}/variation-matrix" .
-                                                     $filter );
+            $response = $this->request->client->get( "variations/{$this->{$this->primaryKey}}/variation-matrix" );
 
             $html = $response->getBody()->getContents();
 
