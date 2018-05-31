@@ -28,7 +28,7 @@ class Request
 
                 'Accept'        => 'application/json',
                 'Content-Type'  => 'application/json',
-                'Authorization' => 'Bearer ' . $token ?? config( 'rackbeat.token' ),
+                'Authorization' => 'Bearer ' . ( !is_null( $token ) ) ? $token : config( 'rackbeat.token' ),
             ],
         ] );
     }
