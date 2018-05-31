@@ -35,7 +35,7 @@ class Lot extends Model
 
             $response = $this->request->client->get( "{$this->entity}/{$this->{$this->primaryKey}}/locations" );
 
-            return collect( json_decode( $response->getBody()->getContents() )->product_locations );
+            return collect( json_decode( $response->getBody()->getContents() )->lot_locations );
 
         } );
     }
