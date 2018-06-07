@@ -17,23 +17,42 @@ use Rackbeat\Exceptions\RackbeatRequestException;
 
 class Request
 {
+    /**
+     * @var \GuzzleHttp\Client
+     */
     public $client;
 
-    public function __construct( $token = null )
+    /**
+     * Request constructor.
+     *
+     * @param null  $token
+     * @param array $options
+     * @param array $headers
+     */
+    public function __construct( $token = null, $options = [], $headers = [] )
     {
         $token        = $token ?? config( 'rackbeat.token' );
-        $this->client = new Client( [
+        $headers      = array_merge( $headers, [
+
+            'Accept'        => 'application/json',
+            'Content-Type'  => 'application/json',
+            'Authorization' => 'Bearer ' . $token,
+        ] );
+        $options      = array_merge( $options, [
 
             'base_uri' => 'https://app.rackbeat.com/api/',
-            'headers'  => [
-
-                'Accept'        => 'application/json',
-                'Content-Type'  => 'application/json',
-                'Authorization' => 'Bearer ' . $token,
-            ],
+            'headers'  => $headers,
         ] );
+        $this->client = new Client( $options );
     }
 
+    /**
+     * @param $callback
+     *
+     * @return mixed
+     * @throws \Rackbeat\Exceptions\RackbeatClientException
+     * @throws \Rackbeat\Exceptions\RackbeatRequestException
+     */
     public function handleWithExceptions( $callback )
     {
         try {

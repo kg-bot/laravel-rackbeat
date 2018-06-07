@@ -24,68 +24,111 @@ use Rackbeat\Utils\Request;
 
 class Rackbeat
 {
+    /**
+     * @var $request Request
+     */
     protected $request;
 
-    public function __construct( $token = null )
+    /**
+     * Rackbeat constructor.
+     *
+     * @param null  $token   API token
+     * @param array $options Custom Guzzle options
+     * @param array $headers Custom Guzzle headers
+     */
+    public function __construct( $token = null, $options = [], $headers = [] )
     {
-        $this->initRequest( $token );
+        $this->initRequest( $token, $options, $headers );
     }
 
-    private function initRequest( $token )
+    private function initRequest( $token, $options = [], $headers = [] )
     {
-        $this->request = new Request( $token );
+        $this->request = new Request( $token, $options, $headers );
     }
 
+    /**
+     * @return \Rackbeat\Builders\SupplierBuilder
+     */
     public function suppliers()
     {
         return new SupplierBuilder( $this->request );
     }
 
+    /**
+     * @return \Rackbeat\Builders\LocationBuilder
+     */
     public function locations()
     {
         return new LocationBuilder( $this->request );
     }
 
+    /**
+     * @return \Rackbeat\Builders\ProductBuilder
+     */
     public function products()
     {
         return new ProductBuilder( $this->request );
     }
 
+    /**
+     * @return \Rackbeat\Builders\LotBuilder
+     */
     public function lots()
     {
         return new LotBuilder( $this->request );
     }
 
+    /**
+     * @return \Rackbeat\Builders\ProductGroupBuilder
+     */
     public function productGroups()
     {
         return new ProductGroupBuilder( $this->request );
     }
 
+    /**
+     * @return \Rackbeat\Builders\Variation\VariationBuilder
+     */
     public function variations()
     {
         return new VariationBuilder( $this->request );
     }
 
+    /**
+     * @return \Rackbeat\Builders\OrderBuilder
+     */
     public function orders()
     {
         return new OrderBuilder( $this->request );
     }
 
+    /**
+     * @return \Rackbeat\Builders\CustomerBuilder
+     */
     public function customers()
     {
         return new CustomerBuilder( $this->request );
     }
 
+    /**
+     * @return \Rackbeat\Builders\CustomerGroupBuilder
+     */
     public function customerGroups()
     {
         return new CustomerGroupBuilder( $this->request );
     }
 
+    /**
+     * @return \Rackbeat\Builders\InventoryMovementBuilder
+     */
     public function inventory_movements()
     {
         return new InventoryMovementBuilder( $this->request );
     }
 
+    /**
+     * @return \Rackbeat\Builders\InventoryAdjustmentBuilder
+     */
     public function inventory_adjustments()
     {
         return new InventoryAdjustmentBuilder( $this->request );
