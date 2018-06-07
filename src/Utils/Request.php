@@ -65,7 +65,7 @@ class Request
 
             if ( $exception->hasResponse() ) {
 
-                $message = $exception->getResponse()->getBody()->getContents();
+                $message = (string) $exception->getResponse()->getBody();
                 $code    = $exception->getResponse()->getStatusCode();
             }
 
@@ -78,7 +78,7 @@ class Request
 
             if ( $exception->hasResponse() ) {
 
-                $message = $exception->getResponse()->getBody()->getContents();
+                $message = (string) $exception->getResponse()->getBody();
                 $code    = $exception->getResponse()->getStatusCode();
             }
 

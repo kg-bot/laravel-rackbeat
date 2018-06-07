@@ -23,7 +23,7 @@ class Lot extends Model
 
             $response = $this->request->client->get( "variations/{$this->{$this->primaryKey}}/variation-matrix" );
 
-            $html = $response->getBody()->getContents();
+            $html = (string) $response->getBody();
 
             return $html;
         } );
@@ -35,7 +35,7 @@ class Lot extends Model
 
             $response = $this->request->client->get( "{$this->entity}/{$this->{$this->primaryKey}}/locations" );
 
-            return collect( json_decode( $response->getBody()->getContents() )->lot_locations );
+            return collect( json_decode( (string) $response->getBody() )->lot_locations );
 
         } );
     }
@@ -51,7 +51,7 @@ class Lot extends Model
             $response =
                 $this->request->client->get( "inventory-reports/inventory-ledger/{$this->{ $this->primaryKey } }" );
 
-            return collect( json_decode( $response->getBody()->getContents() )->ledger_items );
+            return collect( json_decode( (string) $response->getBody() )->ledger_items );
 
         } );
     }

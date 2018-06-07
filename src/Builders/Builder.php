@@ -55,7 +55,7 @@ class Builder
         return $this->request->handleWithExceptions( function () use ( $urlFilters ) {
 
             $response     = $this->request->client->get( "{$this->entity}{$urlFilters}" );
-            $responseData = json_decode( $response->getBody()->getContents() );
+            $responseData = json_decode( (string) $response->getBody() );
             $fetchedItems = collect( $responseData );
             $items        = collect( [] );
 
@@ -72,70 +72,6 @@ class Builder
 
             return $items;
         } );
-    }
-
-    public function find( $id )
-    {
-        return $this->request->handleWithExceptions( function () use ( $id ) {
-
-            $response     = $this->request->client->get( "{$this->entity}/{$id}" );
-            $responseData = collect( json_decode( $response->getBody()->getContents() ) );
-
-            return new $this->model( $this->request, $responseData->first() );
-        } );
-    }
-
-    public function create( $data )
-    {
-        return $this->request->handleWithExceptions( function () use ( $data ) {
-
-            $response = $this->request->client->post( "{$this->entity}", [
-                'json' => $data,
-            ] );
-
-            $responseData = collect( json_decode( $response->getBody()->getContents() ) );
-
-            return new $this->model( $this->request, $responseData->first() );
-        } );
-    }
-
-    public function getEntity()
-    {
-        return $this->entity;
-    }
-
-    public function setEntity( $new_entity )
-    {
-        $this->entity = $new_entity;
-
-        return $this->entity;
-    }
-
-    private function escapeFilter( $variable )
-    {
-        $escapedStrings    = [
-            "$",
-            '(',
-            ')',
-            '*',
-            '[',
-            ']',
-            ',',
-        ];
-        $urlencodedStrings = [
-            '+',
-            ' ',
-        ];
-        foreach ( $escapedStrings as $escapedString ) {
-
-            $variable = str_replace( $escapedString, '$' . $escapedString, $variable );
-        }
-        foreach ( $urlencodedStrings as $urlencodedString ) {
-
-            $variable = str_replace( $urlencodedString, urlencode( $urlencodedString ), $variable );
-        }
-
-        return $variable;
     }
 
     private function switchComparison( $comparison )
@@ -175,5 +111,69 @@ class Builder
         }
 
         return $newComparison;
+    }
+
+    private function escapeFilter( $variable )
+    {
+        $escapedStrings    = [
+            "$",
+            '(',
+            ')',
+            '*',
+            '[',
+            ']',
+            ',',
+        ];
+        $urlencodedStrings = [
+            '+',
+            ' ',
+        ];
+        foreach ( $escapedStrings as $escapedString ) {
+
+            $variable = str_replace( $escapedString, '$' . $escapedString, $variable );
+        }
+        foreach ( $urlencodedStrings as $urlencodedString ) {
+
+            $variable = str_replace( $urlencodedString, urlencode( $urlencodedString ), $variable );
+        }
+
+        return $variable;
+    }
+
+    public function find( $id )
+    {
+        return $this->request->handleWithExceptions( function () use ( $id ) {
+
+            $response     = $this->request->client->get( "{$this->entity}/{$id}" );
+            $responseData = collect( json_decode( (string) $response->getBody() ) );
+
+            return new $this->model( $this->request, $responseData->first() );
+        } );
+    }
+
+    public function create( $data )
+    {
+        return $this->request->handleWithExceptions( function () use ( $data ) {
+
+            $response = $this->request->client->post( "{$this->entity}", [
+                'json' => $data,
+            ] );
+
+            $responseData = collect( json_decode( (string) $response->getBody() ) );
+
+            return new $this->model( $this->request, $responseData->first() );
+        } );
+    }
+
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
+    public function setEntity( $new_entity )
+    {
+        $this->entity = $new_entity;
+
+        return $this->entity;
     }
 }
