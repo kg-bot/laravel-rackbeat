@@ -49,7 +49,7 @@ class Lot extends Model
         return $this->request->handleWithExceptions( function () {
 
             $response =
-                $this->request->client->get( "inventory-reports/inventory-ledger/{$this->{ $this->primaryKey } }" );
+                $this->request->client->get( "reports/ledger/{$this->{ $this->primaryKey } }" );
 
             return collect( json_decode( (string) $response->getBody() )->ledger_items );
 
