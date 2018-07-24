@@ -31,11 +31,11 @@ class Builder
      */
     public function get( $filters = [] )
     {
-        $urlFilters = '';
+        $urlFilters = '?limit=1500';
 
         if ( count( $filters ) > 0 ) {
 
-            $urlFilters .= '?filter=';
+            $urlFilters .= '&filter=';
             $i          = 1;
 
             foreach ( $filters as $filter ) {
@@ -58,6 +58,7 @@ class Builder
             $responseData = json_decode( (string) $response->getBody() );
             $fetchedItems = collect( $responseData );
             $items        = collect( [] );
+            $pages        = $responseData->pages;
 
             foreach ( $fetchedItems->first() as $index => $item ) {
 
