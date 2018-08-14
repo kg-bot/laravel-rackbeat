@@ -17,20 +17,35 @@ class Product extends Model
     protected $entity     = 'products';
     protected $primaryKey = 'number';
 
-    public function inventoryMatrix( $location_id = null )
+    public function inventoryMatrix( $location_id = null, array $filter = null )
     {
-        return $this->request->handleWithExceptions( function () use ( $location_id ) {
+        return $this->request->handleWithExceptions( function () use ( $location_id, $filter ) {
 
-            $filter = '';
+            $query = '';
 
             // We need to use location filter if user has provided any
             if ( !is_null( $location_id ) ) {
 
-                $filter .= '?location_id=' . $location_id;
+                $query .= '?location_id=' . $location_id;
+            }
+
+            if ( !is_null( $filter ) ) {
+
+                foreach ( $filter as $parameter => $value ) {
+
+                    if ( $query === '' ) {
+
+                        $query .= '?' . $parameter . '=' . $value;
+
+                    } else {
+
+                        $query .= '&' . $parameter . '=' . $value;
+                    }
+                }
             }
 
             $response = $this->request->client->get( "{$this->entity}/{$this->{$this->primaryKey}}/variation-matrix" .
-                                                     $filter );
+                                                     $query );
 
             $html = (string) $response->getBody();
 
