@@ -40,7 +40,7 @@ class Request
         ] );
         $options      = array_merge( $options, [
 
-            'base_uri' => 'https://app.rackbeat.com/api/',
+            'base_uri' => config( 'rackbeat.base_uri' ),
             'headers'  => $headers,
         ] );
         $this->client = new Client( $options );

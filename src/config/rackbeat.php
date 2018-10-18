@@ -19,4 +19,5 @@ return [
             ],
         ],
     ],
+    'base_uri' => env( 'RACKBEAT_BASE_URL', 'https://app.rackbeat.com/api/' ),
 ];
