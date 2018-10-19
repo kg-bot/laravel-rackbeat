@@ -11,6 +11,7 @@ namespace Rackbeat;
 
 use Rackbeat\Builders\CustomerBuilder;
 use Rackbeat\Builders\CustomerGroupBuilder;
+use Rackbeat\Builders\EmployeeBuilder;
 use Rackbeat\Builders\InventoryAdjustmentBuilder;
 use Rackbeat\Builders\InventoryMovementBuilder;
 use Rackbeat\Builders\LocationBuilder;
@@ -132,5 +133,13 @@ class Rackbeat
     public function inventory_adjustments()
     {
         return new InventoryAdjustmentBuilder( $this->request );
+    }
+
+    /**
+     * @return \Rackbeat\Builders\EmployeeBuilder
+     */
+    public function employees()
+    {
+        return new EmployeeBuilder( $this->request );
     }
 }
