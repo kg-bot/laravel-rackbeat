@@ -17,6 +17,7 @@ use Rackbeat\Builders\InventoryMovementBuilder;
 use Rackbeat\Builders\LocationBuilder;
 use Rackbeat\Builders\LotBuilder;
 use Rackbeat\Builders\OrderBuilder;
+use Rackbeat\Builders\PaymentTermBuilder;
 use Rackbeat\Builders\ProductBuilder;
 use Rackbeat\Builders\ProductGroupBuilder;
 use Rackbeat\Builders\SupplierBuilder;
@@ -141,5 +142,13 @@ class Rackbeat
     public function employees()
     {
         return new EmployeeBuilder( $this->request );
+    }
+
+    /**
+     * @return \Rackbeat\Builders\PaymentTermBuilder
+     */
+    public function paymentTerms()
+    {
+        return new PaymentTermBuilder( $this->request );
     }
 }
