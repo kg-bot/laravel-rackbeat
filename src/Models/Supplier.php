@@ -16,7 +16,7 @@ class Supplier extends Model
     public $number;
     public $company_name;
 
-    protected $entity     = '/suppliers';
+    protected $entity     = 'suppliers';
     protected $primaryKey = 'number';
     protected $fillable   = [
 

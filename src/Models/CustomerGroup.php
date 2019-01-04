@@ -11,6 +11,6 @@ namespace Rackbeat\Models;
 
 class CustomerGroup
 {
-    protected $entity     = '/customer-groups';
+    protected $entity     = 'customer-groups';
     protected $primaryKey = 'number';
 }

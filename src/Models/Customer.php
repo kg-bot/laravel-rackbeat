@@ -14,6 +14,6 @@ use Rackbeat\Utils\Model;
 class Customer extends Model
 {
 
-    protected $entity     = '/customers';
+    protected $entity     = 'customers';
     protected $primaryKey = 'number';
 }
