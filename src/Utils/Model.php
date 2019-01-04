@@ -80,7 +80,7 @@ class Model
 
         return $this->request->handleWithExceptions( function () use ( $data ) {
 
-            $response = $this->request->client->put( "/{$this->entity}/{$this->{$this->primaryKey}}", [
+            $response = $this->request->client->put( "{$this->entity}/{$this->{$this->primaryKey}}", [
                 'json' => $data,
             ] );
 
