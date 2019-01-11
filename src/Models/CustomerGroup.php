@@ -9,7 +9,9 @@
 namespace Rackbeat\Models;
 
 
-class CustomerGroup
+use Rackbeat\Utils\Model;
+
+class CustomerGroup extends Model
 {
     protected $entity     = 'customer-groups';
     protected $primaryKey = 'number';
