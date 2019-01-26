@@ -22,6 +22,7 @@ use Rackbeat\Builders\ProductBuilder;
 use Rackbeat\Builders\ProductGroupBuilder;
 use Rackbeat\Builders\ProductionOrderBuilder;
 use Rackbeat\Builders\SupplierBuilder;
+use Rackbeat\Builders\SupplierGroupBuilder;
 use Rackbeat\Builders\Variation\VariationBuilder;
 use Rackbeat\Utils\Request;
 
@@ -55,6 +56,11 @@ class Rackbeat
     public function suppliers()
     {
         return new SupplierBuilder( $this->request );
+    }
+
+    public function supplierGroups()
+    {
+        return new SupplierGroupBuilder( $this->request );
     }
 
     /**
