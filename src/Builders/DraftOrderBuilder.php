@@ -13,6 +13,6 @@ use Rackbeat\Models\DraftOrder;
 
 class DraftOrderBuilder extends Builder
 {
-    protected $entity = 'draft-orders';
+    protected $entity = 'orders/drafts';
     protected $model  = DraftOrder::class;
 }

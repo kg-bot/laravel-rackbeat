@@ -13,7 +13,7 @@ use Rackbeat\Utils\Model;
 
 class DraftOrder extends Model
 {
-    protected $entity     = 'draft-orders';
+    protected $entity     = 'orders/drafts';
     protected $primaryKey = 'number';
 
     public function getPDF()
