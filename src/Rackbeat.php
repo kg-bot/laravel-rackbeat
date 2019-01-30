@@ -11,6 +11,7 @@ namespace Rackbeat;
 
 use Rackbeat\Builders\CustomerBuilder;
 use Rackbeat\Builders\CustomerGroupBuilder;
+use Rackbeat\Builders\CustomerInvoiceBuilder;
 use Rackbeat\Builders\DraftOrderBuilder;
 use Rackbeat\Builders\EmployeeBuilder;
 use Rackbeat\Builders\InventoryAdjustmentBuilder;
@@ -24,6 +25,7 @@ use Rackbeat\Builders\ProductGroupBuilder;
 use Rackbeat\Builders\ProductionOrderBuilder;
 use Rackbeat\Builders\SupplierBuilder;
 use Rackbeat\Builders\SupplierGroupBuilder;
+use Rackbeat\Builders\SupplierInvoiceBuilder;
 use Rackbeat\Builders\Variation\VariationBuilder;
 use Rackbeat\Utils\Request;
 
@@ -168,8 +170,27 @@ class Rackbeat
         return new ProductionOrderBuilder( $this->request );
     }
 
+    /**
+     * @return \Rackbeat\Builders\DraftOrderBuilder
+     */
     public function draft_orders()
     {
         return new DraftOrderBuilder( $this->request );
+    }
+
+    /**
+     * @return \Rackbeat\Builders\CustomerInvoiceBuilder
+     */
+    public function customer_invoices()
+    {
+        return new CustomerInvoiceBuilder( $this->request );
+    }
+
+    /**
+     * @return \Rackbeat\Builders\SupplierInvoiceBuilder
+     */
+    public function supplier_invoices()
+    {
+        return new SupplierInvoiceBuilder( $this->request );
     }
 }
