@@ -27,6 +27,7 @@ use Rackbeat\Builders\SupplierBuilder;
 use Rackbeat\Builders\SupplierGroupBuilder;
 use Rackbeat\Builders\SupplierInvoiceBuilder;
 use Rackbeat\Builders\Variation\VariationBuilder;
+use Rackbeat\Builders\WebhookBuilder;
 use Rackbeat\Utils\Request;
 
 class Rackbeat
@@ -192,5 +193,13 @@ class Rackbeat
     public function supplier_invoices()
     {
         return new SupplierInvoiceBuilder( $this->request );
+    }
+
+    /**
+     * @return \Rackbeat\Builders\WebhookBuilder
+     */
+    public function webhooks()
+    {
+        return new WebhookBuilder( $this->request );
     }
 }
