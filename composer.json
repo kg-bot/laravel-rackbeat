@@ -3,30 +3,25 @@
   "description": "Laravel Integration With Rackbeat App",
   "license": "MIT",
   "authors": [
-      {
-          "name": "Stefan Ninic",
-          "email": "ninicstefan94@gmail.com"
-      }
+    {
+      "name": "Stefan Ninic",
+      "email": "ninicstefan94@gmail.com"
+    }
   ],
   "require": {
-
-      "php": ">=7.1",
-      "laravel/framework": "^5.5",
-      "guzzlehttp/guzzle": "*"
+    "php": ">=7.1",
+    "laravel/framework": "^5.5",
+    "guzzlehttp/guzzle": "*",
+    "ext-json": "*"
   },
   "autoload": {
-
-      "psr-4": {
-
-          "Rackbeat\\": "src/"
-      }
+    "psr-4": {
+      "Rackbeat\\": "src/"
+    }
   },
-  "extra":{
-
-    "laravel":{
-
-      "providers":[
-
+  "extra": {
+    "laravel": {
+      "providers": [
         "Rackbeat\\RackbeatServiceProvider"
       ]
     }

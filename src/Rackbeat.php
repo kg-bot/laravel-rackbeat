@@ -202,4 +202,12 @@ class Rackbeat
     {
         return new WebhookBuilder( $this->request );
     }
+
+    /**
+     * @return mixed
+     */
+    public function self()
+    {
+        return json_decode( $this->request->client->get( '/self' ) );
+    }
 }
