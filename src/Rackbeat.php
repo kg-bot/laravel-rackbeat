@@ -208,6 +208,6 @@ class Rackbeat
      */
     public function self()
     {
-        return json_decode( $this->request->client->get( 'self' ) );
+        return $this->request->client->get( 'self' );
     }
 }
