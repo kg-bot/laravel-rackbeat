@@ -20,6 +20,7 @@ use Rackbeat\Builders\LocationBuilder;
 use Rackbeat\Builders\LotBuilder;
 use Rackbeat\Builders\OrderBuilder;
 use Rackbeat\Builders\PaymentTermBuilder;
+use Rackbeat\Builders\PluginBuilder;
 use Rackbeat\Builders\ProductBuilder;
 use Rackbeat\Builders\ProductGroupBuilder;
 use Rackbeat\Builders\ProductionOrderBuilder;
@@ -201,6 +202,14 @@ class Rackbeat
     public function webhooks()
     {
         return new WebhookBuilder( $this->request );
+    }
+
+    /**
+     * @return \Rackbeat\Builders\PluginBuilder
+     */
+    public function user_account_plugins()
+    {
+        return new PluginBuilder( $this->request );
     }
 
     /**
