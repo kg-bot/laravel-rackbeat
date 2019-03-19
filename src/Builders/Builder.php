@@ -72,7 +72,7 @@ class Builder
 
             foreach ( $filters as $filter ) {
 
-                $urlFilters .= $filter[ 0 ] . '=' . $this->escapeFilter( $filter[ 1 ] );
+                $urlFilters .= $filter[ 0 ] . $filter[ 1 ] . $this->escapeFilter( $filter[ 2 ] );
 
                 if ( count( $filters ) > $i ) {
 
