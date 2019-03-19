@@ -32,7 +32,7 @@ class Builder
      */
     public function get( $filters = [] )
     {
-        $filters[] = [ 'limit', 1500 ];
+        $filters[] = [ 'limit', '=', 1500 ];
 
         $urlFilters = $this->parseFilters( $filters );
 
@@ -72,7 +72,7 @@ class Builder
 
             foreach ( $filters as $filter ) {
 
-                $urlFilters .= $filter[ 0 ] . $filter[ 1 ] . $this->escapeFilter( $filter[ 2 ] );
+                $urlFilters .= $filter[ 0 ] . $filter[ 1 ] . $this->escapeFilter( $filter[ 2 ] ?? '=' );
 
                 if ( count( $filters ) > $i ) {
 
