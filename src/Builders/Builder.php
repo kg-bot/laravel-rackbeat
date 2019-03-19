@@ -24,6 +24,7 @@ class Builder
         $this->request = $request;
     }
 
+
     /**
      * @param array $filters
      *
@@ -31,26 +32,9 @@ class Builder
      */
     public function get( $filters = [] )
     {
-        $urlFilters = '?limit=1500';
+        $filters[] = [ 'limit', 1500 ];
 
-        if ( count( $filters ) > 0 ) {
-
-            $urlFilters .= '&filter=';
-            $i          = 1;
-
-            foreach ( $filters as $filter ) {
-
-                $urlFilters .= $filter[ 0 ] . $this->switchComparison( $filter[ 1 ] ) .
-                               $this->escapeFilter( $filter[ 2 ] ); // todo fix arrays aswell ([1,2,3,...] string)
-
-                if ( count( $filters ) > $i ) {
-
-                    $urlFilters .= '$and:'; // todo allow $or: also
-                }
-
-                $i++;
-            }
-        }
+        $urlFilters = $this->parseFilters( $filters );
 
         return $this->request->handleWithExceptions( function () use ( $urlFilters ) {
 
@@ -75,43 +59,31 @@ class Builder
         } );
     }
 
-    private function switchComparison( $comparison )
+    protected function parseFilters( $filters = [] )
     {
-        switch ( $comparison ) {
-            case '=':
-            case '==':
-                $newComparison = '$eq:';
-                break;
-            case '!=':
-                $newComparison = '$ne:';
-                break;
-            case '>':
-                $newComparison = '$gt:';
-                break;
-            case '>=':
-                $newComparison = '$gte:';
-                break;
-            case '<':
-                $newComparison = '$lt:';
-                break;
-            case '<=':
-                $newComparison = '$lte:';
-                break;
-            case 'like':
-                $newComparison = '$like:';
-                break;
-            case 'in':
-                $newComparison = '$in:';
-                break;
-            case '!in':
-                $newComparison = '$nin:';
-                break;
-            default:
-                $newComparison = "${$comparison}:";
-                break;
+
+        $urlFilters = '';
+
+        if ( count( $filters ) > 0 ) {
+
+            $i = 1;
+
+            $urlFilters .= '?';
+
+            foreach ( $filters as $filter ) {
+
+                $urlFilters .= $filter[ 0 ] . '=' . $this->escapeFilter( $filter[ 1 ] );
+
+                if ( count( $filters ) > $i ) {
+
+                    $urlFilters .= '&';
+                }
+
+                $i++;
+            }
         }
 
-        return $newComparison;
+        return $urlFilters;
     }
 
     private function escapeFilter( $variable )
@@ -139,6 +111,61 @@ class Builder
         }
 
         return $variable;
+    }
+
+    public function all( $filters = [] )
+    {
+        $page = 1;
+
+        $items = collect();
+
+        $response = function ( $filters, $page ) {
+
+            $filters[] = [ 'limit', 1500 ];
+            $filters[] = [ 'page', $page ];
+
+            $urlFilters = $this->parseFilters( $filters );
+
+            return $this->request->handleWithExceptions( function () use ( $urlFilters ) {
+
+                $response     = $this->request->client->get( "{$this->entity}{$urlFilters}" );
+                $responseData = json_decode( (string) $response->getBody() );
+                $fetchedItems = collect( $responseData );
+                $items        = collect( [] );
+                $pages        = $responseData->pages;
+
+                foreach ( $fetchedItems->first() as $index => $item ) {
+
+
+                    /** @var Model $model */
+                    $model = new $this->model( $this->request, $item );
+
+                    $items->push( $model );
+
+
+                }
+
+                return (object) [
+
+                    'items' => $items,
+                    'pages' => $pages,
+                ];
+            } );
+        };
+
+        do {
+
+            $resp = $response( $filters, $page );
+
+            $items = $items->merge( $resp->items );
+            $page++;
+            sleep( 2 );
+
+        } while ( $page <= $resp->pages );
+
+
+        return $items;
+
     }
 
     public function find( $id )
