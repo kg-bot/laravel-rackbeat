@@ -72,7 +72,7 @@ class Builder
 
             foreach ( $filters as $filter ) {
 
-                $urlFilters .= $filter[ 0 ] . $filter[ 1 ] . $this->escapeFilter( $filter[ 2 ] ?? '=' );
+                $urlFilters .= $filter[ 0 ] . $filter[ 1 ] . $filter[ 2 ] ?? '=';
 
                 if ( count( $filters ) > $i ) {
 
@@ -84,33 +84,6 @@ class Builder
         }
 
         return $urlFilters;
-    }
-
-    private function escapeFilter( $variable )
-    {
-        $escapedStrings    = [
-            "$",
-            '(',
-            ')',
-            '*',
-            '[',
-            ']',
-            ',',
-        ];
-        $urlencodedStrings = [
-            '+',
-            ' ',
-        ];
-        foreach ( $escapedStrings as $escapedString ) {
-
-            $variable = str_replace( $escapedString, '$' . $escapedString, $variable );
-        }
-        foreach ( $urlencodedStrings as $urlencodedString ) {
-
-            $variable = str_replace( $urlencodedString, urlencode( $urlencodedString ), $variable );
-        }
-
-        return $variable;
     }
 
     public function all( $filters = [] )
