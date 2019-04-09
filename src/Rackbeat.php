@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nts
- * Date: 31.3.18.
- * Time: 15.12
- */
 
 namespace Rackbeat;
 
@@ -19,6 +13,7 @@ use Rackbeat\Builders\InventoryMovementBuilder;
 use Rackbeat\Builders\LocationBuilder;
 use Rackbeat\Builders\LotBuilder;
 use Rackbeat\Builders\OrderBuilder;
+use Rackbeat\Builders\OrderShipmentBuilder;
 use Rackbeat\Builders\PaymentTermBuilder;
 use Rackbeat\Builders\PluginBuilder;
 use Rackbeat\Builders\ProductBuilder;
@@ -210,6 +205,14 @@ class Rackbeat
     public function user_account_plugins()
     {
         return new PluginBuilder( $this->request );
+    }
+
+    /**
+     * @return \Rackbeat\Builders\OrderShipmentBuilder
+     */
+    public function order_shipments()
+    {
+        return new OrderShipmentBuilder( $this->request );
     }
 
     /**
