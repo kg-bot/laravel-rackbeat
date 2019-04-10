@@ -13,6 +13,6 @@ use Rackbeat\Utils\Model;
 
 class OrderShipment extends Model
 {
-    protected $entity     = 'order-shipment';
+    protected $entity     = 'order-shipments';
     protected $primaryKey = 'id';
 }

@@ -13,6 +13,6 @@ use Rackbeat\Models\OrderShipment;
 
 class OrderShipmentBuilder extends Builder
 {
-    protected $entity = 'order-shipment';
+    protected $entity = 'order-shipments';
     protected $model  = OrderShipment::class;
 }
