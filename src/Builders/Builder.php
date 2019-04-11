@@ -94,8 +94,8 @@ class Builder
 
         $response = function ( $filters, $page ) {
 
-            $filters[] = [ 'limit', 1500 ];
-            $filters[] = [ 'page', $page ];
+            $filters[] = [ 'limit', '=', 1500 ];
+            $filters[] = [ 'page', '=', $page ];
 
             $urlFilters = $this->parseFilters( $filters );
 
