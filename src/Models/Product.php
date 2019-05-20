@@ -92,4 +92,17 @@ class Product extends Model
 
         } );
     }
+
+    public function fields()
+    {
+
+        return $this->request->handleWithExceptions( function () {
+
+            $response =
+                $this->request->client->get( "{$this->entity}/{$this->{$this->primaryKey}}/fields" );
+
+            return collect( json_decode( (string) $response->getBody() )->field_values );
+
+        } );
+    }
 }
