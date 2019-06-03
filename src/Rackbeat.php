@@ -8,6 +8,7 @@ use Rackbeat\Builders\CustomerGroupBuilder;
 use Rackbeat\Builders\CustomerInvoiceBuilder;
 use Rackbeat\Builders\DraftOrderBuilder;
 use Rackbeat\Builders\EmployeeBuilder;
+use Rackbeat\Builders\FieldBuilder;
 use Rackbeat\Builders\InventoryAdjustmentBuilder;
 use Rackbeat\Builders\InventoryMovementBuilder;
 use Rackbeat\Builders\LocationBuilder;
@@ -213,6 +214,14 @@ class Rackbeat
     public function order_shipments()
     {
         return new OrderShipmentBuilder( $this->request );
+    }
+
+    /**
+     * @return \Rackbeat\Builders\FieldBuilder
+     */
+    public function fields()
+    {
+        return new FieldBuilder( $this->request );
     }
 
     /**
