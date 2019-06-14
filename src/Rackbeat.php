@@ -7,6 +7,7 @@ use Rackbeat\Builders\CustomerBuilder;
 use Rackbeat\Builders\CustomerGroupBuilder;
 use Rackbeat\Builders\CustomerInvoiceBuilder;
 use Rackbeat\Builders\DraftOrderBuilder;
+use Rackbeat\Builders\DraftPurchaseOrderBuilder;
 use Rackbeat\Builders\EmployeeBuilder;
 use Rackbeat\Builders\FieldBuilder;
 use Rackbeat\Builders\InventoryAdjustmentBuilder;
@@ -20,6 +21,8 @@ use Rackbeat\Builders\PluginBuilder;
 use Rackbeat\Builders\ProductBuilder;
 use Rackbeat\Builders\ProductGroupBuilder;
 use Rackbeat\Builders\ProductionOrderBuilder;
+use Rackbeat\Builders\PurchaseOrderBuilder;
+use Rackbeat\Builders\PurchaseOrderReceiptBuilder;
 use Rackbeat\Builders\SupplierBuilder;
 use Rackbeat\Builders\SupplierGroupBuilder;
 use Rackbeat\Builders\SupplierInvoiceBuilder;
@@ -168,6 +171,14 @@ class Rackbeat
         return new ProductionOrderBuilder( $this->request );
     }
 
+	/**
+	 * @return \Rackbeat\Builders\PurchaseOrderBuilder
+	 */
+	public function purchase_orders()
+	{
+		return new PurchaseOrderBuilder( $this->request );
+	}
+
     /**
      * @return \Rackbeat\Builders\DraftOrderBuilder
      */
@@ -175,6 +186,14 @@ class Rackbeat
     {
         return new DraftOrderBuilder( $this->request );
     }
+
+	/**
+	 * @return \Rackbeat\Builders\DraftPurchaseOrderBuilder
+	 */
+	public function draft_purchase_orders()
+	{
+		return new DraftPurchaseOrderBuilder( $this->request );
+	}
 
     /**
      * @return \Rackbeat\Builders\CustomerInvoiceBuilder
