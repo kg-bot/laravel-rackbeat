@@ -49,7 +49,7 @@ class Rackbeat
         $this->initRequest( $token, $options, $headers );
     }
 
-    private function initRequest( $token, $options = [], $headers = [] )
+    protected function initRequest( $token, $options = [], $headers = [] )
     {
         $this->request = new Request( $token, $options, $headers );
     }
