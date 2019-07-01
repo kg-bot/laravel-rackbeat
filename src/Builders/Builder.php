@@ -72,7 +72,7 @@ class Builder
 
         if ( count( $filters ) > 0 ) {
 
-            $filters = array_unique($filters);
+            $filters = array_unique($filters, SORT_REGULAR);
 
             $i = 1;
 
