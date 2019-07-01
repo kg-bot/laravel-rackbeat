@@ -8,6 +8,7 @@
 
 namespace Rackbeat\Builders;
 
+use Illuminate\Support\Collection;
 use Rackbeat\Utils\Model;
 use Rackbeat\Utils\Request;
 
@@ -19,7 +20,7 @@ class Builder
     protected $model;
     private   $request;
 
-    public function __construct( Request $request )
+    public function __construct(Request $request )
     {
         $this->request = $request;
     }
@@ -28,9 +29,9 @@ class Builder
     /**
      * @param array $filters
      *
-     * @return \Illuminate\Support\Collection|Model[]
+     * @return Collection|Model[]
      */
-    public function get( $filters = [] )
+    public function get($filters = [] )
     {
         $filters[] = [ 'limit', '=', 1500 ];
 
@@ -44,7 +45,7 @@ class Builder
             $items        = collect( [] );
             $pages        = $responseData->pages;
 
-            foreach ( $fetchedItems->first() as $index => $item ) {
+            foreach ($fetchedItems->first() as $index => $item ) {
 
 
                 /** @var Model $model */
@@ -59,18 +60,25 @@ class Builder
         } );
     }
 
-    protected function parseFilters( $filters = [] )
+    protected function parseFilters($filters = [] )
     {
+
+        if (array_search('limit', array_column($filters, 0)) !== (count($filters) - 1)) {
+
+            unset($filters[count($filters) - 1]);
+        }
 
         $urlFilters = '';
 
         if ( count( $filters ) > 0 ) {
 
+            $filters = array_unique($filters);
+
             $i = 1;
 
             $urlFilters .= '?';
 
-            foreach ( $filters as $filter ) {
+            foreach ($filters as $filter ) {
 
                 $urlFilters .= $filter[ 0 ] . $filter[ 1 ] . $filter[ 2 ] ?? '=';
 
@@ -86,7 +94,7 @@ class Builder
         return $urlFilters;
     }
 
-    public function all( $filters = [] )
+    public function all($filters = [] )
     {
         $page = 1;
 
@@ -107,7 +115,7 @@ class Builder
                 $items        = collect( [] );
                 $pages        = $responseData->pages;
 
-                foreach ( $fetchedItems->first() as $index => $item ) {
+                foreach ($fetchedItems->first() as $index => $item ) {
 
 
                     /** @var Model $model */
