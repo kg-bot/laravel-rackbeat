@@ -34,4 +34,14 @@ class Order extends Model
                                          ->getContents();
         } );
     }
+
+    public function createShipment()
+    {
+        return $this->request->handleWithExceptions(function () {
+
+            return $this->request->client->post("{$this->entity}/{$this->{$this->primaryKey}}/create-shipment")
+                ->getBody()
+                ->getContents();
+        });
+    }
 }
