@@ -15,4 +15,14 @@ class OrderShipment extends Model
 {
     protected $entity     = 'order-shipments';
     protected $primaryKey = 'id';
+
+    public function markShipped()
+    {
+        return $this->request->handleWithExceptions(function () {
+
+            return $this->request->client->post("orders/shipments/{$this->{$this->primaryKey}}/mark-shipped")
+                ->getBody()
+                ->getContents();
+        });
+    }
 }

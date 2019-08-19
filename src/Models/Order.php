@@ -39,9 +39,11 @@ class Order extends Model
     {
         return $this->request->handleWithExceptions(function () {
 
-            return $this->request->client->post("{$this->entity}/{$this->{$this->primaryKey}}/create-shipment")
+            $response = $this->request->client->post("{$this->entity}/{$this->{$this->primaryKey}}/create-shipment")
                 ->getBody()
                 ->getContents();
+
+            return new OrderShipment($this->request, $response->order_shipment);
         });
     }
 }
