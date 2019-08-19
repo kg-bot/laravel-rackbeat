@@ -39,9 +39,8 @@ class Order extends Model
     {
         return $this->request->handleWithExceptions(function () {
 
-            $response = $this->request->client->post("{$this->entity}/{$this->{$this->primaryKey}}/create-shipment")
-                ->getBody()
-                ->getContents();
+            $response = json_decode((string)$this->request->client->post("{$this->entity}/{$this->{$this->primaryKey}}/create-shipment")
+                ->getBody());
 
             return new OrderShipment($this->request, $response->order_shipment);
         });
