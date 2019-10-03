@@ -70,9 +70,15 @@ class Product extends Model
     {
         return $this->request->handleWithExceptions(function () use ($number) {
 
-            $response = $this->request->client->get("{$this->entity}/{$this->{$this->primaryKey}}/locations" . (($number !== null) ? '/' . $number : ''));
+            $response = json_decode((string)$this->request->client->get("{$this->entity}/{$this->{$this->primaryKey}}/locations" . (($number !== null) ? '/' . $number : ''))->getBody());
 
-            return collect( json_decode( (string) $response->getBody() )->product_locations );
+            if (isset($response->product_locations)) {
+
+                return collect($response->product_locations);
+            }
+
+            return $response;
+
 
         } );
     }
