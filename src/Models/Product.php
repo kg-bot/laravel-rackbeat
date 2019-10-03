@@ -75,9 +75,13 @@ class Product extends Model
             if (isset($response->product_locations)) {
 
                 return collect($response->product_locations);
-            }
+            } else if (isset($response->product_location)) {
 
-            return $response;
+                return $response->product_location;
+            } else {
+
+                return $response;
+            }
 
 
         } );
