@@ -9,7 +9,7 @@
 return [
 
     'token'    => env( 'RACKBEAT_API_TOKEN' ),
-    'user_agent' => env('RACKBEAT_USER_AGENT', 'kg-bot/laravel-rackbeat')
+    'user_agent' => env('RACKBEAT_USER_AGENT', 'kg-bot/laravel-rackbeat'),
     'supplier' => [
 
         'fields' => [
