@@ -66,11 +66,11 @@ class Product extends Model
         } );
     }
 
-    public function location()
+    public function location($number = null)
     {
-        return $this->request->handleWithExceptions( function () {
+        return $this->request->handleWithExceptions(function () use ($number) {
 
-            $response = $this->request->client->get( "{$this->entity}/{$this->{$this->primaryKey}}/locations" );
+            $response = $this->request->client->get("{$this->entity}/{$this->{$this->primaryKey}}/locations" . (($number !== null) ? '/' . $number : ''));
 
             return collect( json_decode( (string) $response->getBody() )->product_locations );
 
