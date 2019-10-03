@@ -33,9 +33,10 @@ class Request
     {
         $token        = $token ?? config( 'rackbeat.token' );
         $headers      = array_merge( $headers, [
-
-            'Accept'        => 'application/json',
-            'Content-Type'  => 'application/json',
+            
+            'User-Agent'    => config('rackbeat.user_agent'),
+            'Accept'        => 'application/json; charset=utf8',
+            'Content-Type'  => 'application/json; charset=utf8',
             'Authorization' => 'Bearer ' . $token,
         ] );
         $options      = array_merge( $options, [
