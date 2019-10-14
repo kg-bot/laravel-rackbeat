@@ -149,11 +149,13 @@ class Builder
 
     }
 
-    public function find( $id )
+    public function find($id, $filters = [])
     {
-        return $this->request->handleWithExceptions( function () use ( $id ) {
+        $urlFilters = $this->parseFilters($filters);
 
-            $response     = $this->request->client->get( "{$this->entity}/{$id}" );
+        return $this->request->handleWithExceptions(function () use ($id, $urlFilters) {
+
+            $response = $this->request->client->get("{$this->entity}/{$id}{$urlFilters}");
             $responseData = collect( json_decode( (string) $response->getBody() ) );
 
             return new $this->model( $this->request, $responseData->first() );
