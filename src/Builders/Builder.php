@@ -27,9 +27,12 @@ class Builder
 
 
     /**
-     * @param array $filters
+     * Get only first page of resources, you can also set query parameters, default limit is 1000
      *
-     * @return Collection|Model[]
+     * @param array $filters
+     * @return mixed
+     * @throws \Rackbeat\Exceptions\RackbeatClientException
+     * @throws \Rackbeat\Exceptions\RackbeatRequestException
      */
     public function get($filters = [] )
     {
@@ -94,6 +97,13 @@ class Builder
         return $urlFilters;
     }
 
+    /**
+     * It will iterate over all pages until it does not receive empty response, you can also set query parameters,
+     * default limit per page is 1000
+     *
+     * @param array $filters
+     * @return mixed
+     */
     public function all($filters = [] )
     {
         $page = 1;
@@ -102,6 +112,9 @@ class Builder
 
         $response = function ( $filters, $page ) {
 
+            /**
+             * Default filters, limit must be always set last otherwise it will not work
+             */
             $filters[] = [ 'page', '=', $page ];
             $filters[] = ['limit', '=', 1000];
 
@@ -149,6 +162,15 @@ class Builder
 
     }
 
+    /**
+     * Find single resource by its id filed, it also accepts query parameters
+     *
+     * @param $id
+     * @param array $filters
+     * @return mixed
+     * @throws \Rackbeat\Exceptions\RackbeatClientException
+     * @throws \Rackbeat\Exceptions\RackbeatRequestException
+     */
     public function find($id, $filters = [])
     {
         $urlFilters = $this->parseFilters($filters);
@@ -162,6 +184,14 @@ class Builder
         } );
     }
 
+    /**
+     * Create new resource and return created model
+     *
+     * @param $data
+     * @return mixed
+     * @throws \Rackbeat\Exceptions\RackbeatClientException
+     * @throws \Rackbeat\Exceptions\RackbeatRequestException
+     */
     public function create( $data )
     {
         return $this->request->handleWithExceptions( function () use ( $data ) {
