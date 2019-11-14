@@ -28,7 +28,7 @@ class Model
 
         foreach ( $data as $key => $value ) {
 
-            $customSetterMethod = 'set' . ucfirst( camel_case( $key ) ) . 'Attribute';
+            $customSetterMethod = 'set' . ucfirst(\Str::camel($key)) . 'Attribute';
 
             if ( !method_exists( $this, $customSetterMethod ) ) {
 
