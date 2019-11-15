@@ -9,6 +9,7 @@
 namespace Rackbeat\Models;
 
 
+use Rackbeat\Builders\OrderShipmentBuilder;
 use Rackbeat\Utils\Model;
 
 class Order extends Model
@@ -20,7 +21,7 @@ class Order extends Model
     {
         return $this->request->handleWithExceptions( function () {
             return $this->request->client->get( "{$this->entity}/{$this->{$this->primaryKey}}.pdf" )->getBody()
-                                         ->getContents();
+                ->getContents();
         } );
     }
 
@@ -30,8 +31,8 @@ class Order extends Model
         return $this->request->handleWithExceptions( function () {
 
             return $this->request->client->post( "{$this->entity}/{$this->{$this->primaryKey}}/reopen" )
-                                         ->getBody()
-                                         ->getContents();
+                ->getBody()
+                ->getContents();
         } );
     }
 
@@ -43,6 +44,18 @@ class Order extends Model
                 ->getBody());
 
             return new OrderShipment($this->request, $response->order_shipment);
+        });
+    }
+
+    public function shipments()
+    {
+        return $this->request->handleWithExceptions(function () {
+
+            $builder = new OrderShipmentBuilder($this->request);
+
+            return $builder->get([
+                ['order_number', '=', $this->{$this->primaryKey}],
+            ]);
         });
     }
 }
