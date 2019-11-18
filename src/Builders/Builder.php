@@ -66,7 +66,8 @@ class Builder
     protected function parseFilters($filters = [] )
     {
 
-        if (array_search('limit', array_column($filters, 0)) !== (count($filters) - 1)) {
+        $limit = array_search('limit', array_column($filters, 0));
+        if ($limit !== false && $limit !== (count($filters) - 1)) {
 
             unset($filters[count($filters) - 1]);
         }
