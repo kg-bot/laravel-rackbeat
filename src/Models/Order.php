@@ -70,7 +70,7 @@ class Order extends Model
     {
         return $this->request->handleWithExceptions(function () use ($book) {
 
-            $response = json_decode((string)$this->request->client->post("{$this->entity}/{$this->{$this->primaryKey}}/convert-to-invoice" . (($book === true) ? '?book' : ''))
+            $response = json_decode((string)$this->request->client->post("{$this->entity}/{$this->{$this->primaryKey}}/convert-to-invoice?book=" . (($book === true) ? 'true' : 'false'))
                 ->getBody());
 
             $invoice = (new CustomerInvoiceBuilder($this->request))->find($response->invoice_id);
