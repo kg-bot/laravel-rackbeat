@@ -21,7 +21,7 @@ class CustomerInvoice extends Model
     {
         return $this->request->handleWithExceptions(function () use ($send_email) {
 
-            return $this->request->client->post("{$this->entity}/{$this->{$this->primaryKey}}/book" . (($send_email === true) ? '?send_mail' : ''))
+            return $this->request->client->post("{$this->entity}/{$this->{$this->primaryKey}}/book" . (($send_email === true) ? '?send_mail=true' : ''))
                 ->getBody()
                 ->getContents();
         });
