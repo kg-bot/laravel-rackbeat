@@ -12,6 +12,7 @@ use Rackbeat\Builders\EmployeeBuilder;
 use Rackbeat\Builders\FieldBuilder;
 use Rackbeat\Builders\InventoryAdjustmentBuilder;
 use Rackbeat\Builders\InventoryMovementBuilder;
+use Rackbeat\Builders\LayoutBuilder;
 use Rackbeat\Builders\LocationBuilder;
 use Rackbeat\Builders\LotBuilder;
 use Rackbeat\Builders\OrderBuilder;
@@ -232,7 +233,7 @@ class Rackbeat
      */
     public function order_shipments()
     {
-        return new OrderShipmentBuilder( $this->request );
+        return new OrderShipmentBuilder($this->request);
     }
 
     /**
@@ -240,7 +241,15 @@ class Rackbeat
      */
     public function fields()
     {
-        return new FieldBuilder( $this->request );
+        return new FieldBuilder($this->request);
+    }
+
+    /**
+     * @return LayoutBuilder
+     */
+    public function layouts()
+    {
+        return new LayoutBuilder($this->request);
     }
 
     /**
@@ -248,6 +257,6 @@ class Rackbeat
      */
     public function self()
     {
-        return json_decode( (string) $this->request->client->get( 'self' )->getBody() );
+        return json_decode((string)$this->request->client->get('self')->getBody());
     }
 }
