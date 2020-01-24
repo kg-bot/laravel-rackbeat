@@ -9,6 +9,7 @@
 namespace Rackbeat\Models;
 
 
+use Rackbeat\Builders\CustomerInvoiceBuilder;
 use Rackbeat\Builders\OrderShipmentBuilder;
 use Rackbeat\Utils\Model;
 
@@ -56,6 +57,25 @@ class Order extends Model
             return $builder->get([
                 ['order_number', '=', $this->{$this->primaryKey}],
             ]);
+        });
+    }
+
+    /**
+     * @param bool $book Should the invoice be booked
+     * @return CustomerInvoice
+     * @throws \Rackbeat\Exceptions\RackbeatClientException
+     * @throws \Rackbeat\Exceptions\RackbeatRequestException
+     */
+    public function convertToInvoice($book = false)
+    {
+        return $this->request->handleWithExceptions(function () use ($book) {
+
+            $response = json_decode((string)$this->request->client->post("{$this->entity}/{$this->{$this->primaryKey}}/convert-to-invoice?bbok={$book}")
+                ->getBody());
+
+            $invoice = (new CustomerInvoiceBuilder($this->request))->find($response->invoice_id);
+
+            return $invoice;
         });
     }
 }
