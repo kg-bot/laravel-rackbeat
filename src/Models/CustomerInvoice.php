@@ -17,11 +17,11 @@ class CustomerInvoice extends Model
     protected $entity = 'customer-invoices';
     protected $primaryKey = 'number';
 
-    public function book()
+    public function book($send_email = false)
     {
-        return $this->request->handleWithExceptions(function () {
+        return $this->request->handleWithExceptions(function () use ($send_email) {
 
-            return $this->request->client->post("{$this->entity}/{$this->{$this->primaryKey}}/book")
+            return $this->request->client->post("{$this->entity}/{$this->{$this->primaryKey}}/book" . (($send_email === true) ? '?send_email=true' : ''))
                 ->getBody()
                 ->getContents();
         });
