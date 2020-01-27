@@ -9,11 +9,22 @@
 namespace Rackbeat\Models;
 
 
+use Rackbeat\Builders\CustomerContactBuilder;
 use Rackbeat\Utils\Model;
 
 class Customer extends Model
 {
 
-    protected $entity     = 'customers';
+    protected $entity = 'customers';
     protected $primaryKey = 'number';
+
+    public function contacts()
+    {
+        return $this->request->handleWithExceptions(function () {
+
+            $builder = new CustomerContactBuilder($this->request, $this->{$this->primaryKey});
+
+            return $builder->get();
+        });
+    }
 }

@@ -4,6 +4,7 @@ namespace Rackbeat;
 
 
 use Rackbeat\Builders\CustomerBuilder;
+use Rackbeat\Builders\CustomerContactBuilder;
 use Rackbeat\Builders\CustomerGroupBuilder;
 use Rackbeat\Builders\CustomerInvoiceBuilder;
 use Rackbeat\Builders\DraftOrderBuilder;
@@ -250,6 +251,16 @@ class Rackbeat
     public function layouts()
     {
         return new LayoutBuilder($this->request);
+    }
+
+    /**
+     * This resource requires you to do $builder->setEntity and to replace {customer} in it with desired customer, otherwise it won't work
+     *
+     * @return CustomerContactBuilder
+     */
+    public function customer_contacts()
+    {
+        return new CustomerContactBuilder($this->request);
     }
 
     /**
