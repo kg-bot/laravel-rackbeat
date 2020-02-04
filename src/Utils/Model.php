@@ -43,7 +43,13 @@ class Model
 
     protected function setAttribute( $attribute, $value )
     {
+        if ($attribute === $this->primaryKey) {
+
+            $value = rawurlencode(rawurlencode($value));
+        }
+
         $this->{$attribute} = $value;
+
     }
 
     public function __toString()

@@ -175,6 +175,7 @@ class Builder
     public function find($id, $filters = [])
     {
         $urlFilters = $this->parseFilters($filters);
+        $id = rawurldecode(rawurlencode($id));
 
         return $this->request->handleWithExceptions(function () use ($id, $urlFilters) {
 
