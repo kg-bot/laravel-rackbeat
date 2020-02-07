@@ -10,6 +10,7 @@ namespace Rackbeat\Models;
 
 
 use Rackbeat\Builders\CustomerInvoiceBuilder;
+use Rackbeat\Builders\OrderNoteBuilder;
 use Rackbeat\Builders\OrderShipmentBuilder;
 use Rackbeat\Utils\Model;
 
@@ -76,6 +77,17 @@ class Order extends Model
             $invoice = (new CustomerInvoiceBuilder($this->request))->find($response->invoice_id);
 
             return $invoice;
+        });
+    }
+
+    public function notes()
+    {
+        return $this->request->handleWithExceptions(function () {
+
+            $builder = new OrderNoteBuilder($this->request);
+            $builder->setEntity(str_replace(':number', $this->{$this->primaryKey}, $builder->getEntity()));
+
+            return $builder->get();
         });
     }
 }
