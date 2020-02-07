@@ -57,7 +57,9 @@ class CustomerInvoice extends Model
                 ];
             }
 
-            return $this->request->client->post("{$this->entity}/{$this->{$this->primaryKey}}/book" . $query, $body)
+            return $this->request->client->post("{$this->entity}/{$this->{$this->primaryKey}}/book" . $query, [
+                'json' => $body,
+            ])
                 ->getBody()
                 ->getContents();
         });
