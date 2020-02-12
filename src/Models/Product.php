@@ -44,7 +44,7 @@ class Product extends Model
                 }
             }
 
-            $response = $this->request->client->get("{$this->entity}/{$this->{$this->url_friendly_id}}/variation-matrix" .
+            $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/variation-matrix" .
                 $query);
 
             $html = (string) $response->getBody();
@@ -58,7 +58,7 @@ class Product extends Model
     {
         return $this->request->handleWithExceptions( function () use ( $variation_id ) {
 
-            $response = $this->request->client->get("variations/{$this->{$this->url_friendly_id}}/variation-matrix");
+            $response = $this->request->client->get("variations/{$this->url_friendly_id}/variation-matrix");
 
             $html = (string) $response->getBody();
 
@@ -70,7 +70,7 @@ class Product extends Model
     {
         return $this->request->handleWithExceptions(function () use ($number) {
 
-            $response = json_decode((string)$this->request->client->get("{$this->entity}/{$this->{$this->url_friendly_id}}/locations" . (($number !== null) ? '/' . $number : ''))->getBody());
+            $response = json_decode((string)$this->request->client->get("{$this->entity}/{$this->url_friendly_id}/locations" . (($number !== null) ? '/' . $number : ''))->getBody());
 
             if (isset($response->product_locations)) {
 
@@ -109,7 +109,7 @@ class Product extends Model
         return $this->request->handleWithExceptions( function () {
 
             $response =
-                $this->request->client->get("{$this->entity}/{$this->{$this->url_friendly_id}}/fields");
+                $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/fields");
 
             return collect( json_decode( (string) $response->getBody() )->field_values );
 

@@ -32,7 +32,7 @@ class Type extends Model
         $options    = new TypeOptionBuilder( $this->request );
         $old_entity = $options->getEntity();
         $new_entity = $options->setEntity(str_replace(':variation_number', $this->variation_id, $old_entity));
-        $options->setEntity(str_replace(':type_number', $this->{$this->url_friendly_id}, $new_entity));
+        $options->setEntity(str_replace(':type_number', $this->url_friendly_id, $new_entity));
 
         return $options;
     }

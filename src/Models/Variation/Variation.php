@@ -22,7 +22,7 @@ class Variation extends Model
     {
         $types      = new TypeBuilder( $this->request );
         $old_entity = $types->getEntity();
-        $types->setEntity(str_replace(':variation_number', $this->{$this->url_friendly_id}, $old_entity));
+        $types->setEntity(str_replace(':variation_number', $this->url_friendly_id, $old_entity));
 
         return $types;
     }

@@ -21,7 +21,7 @@ class Lot extends Model
     {
         return $this->request->handleWithExceptions( function () use ( $variation_id ) {
 
-            $response = $this->request->client->get("variations/{$this->{$this->url_friendly_id}}/variation-matrix");
+            $response = $this->request->client->get("variations/{$this->url_friendly_id}/variation-matrix");
 
             $html = (string) $response->getBody();
 
@@ -33,7 +33,7 @@ class Lot extends Model
     {
         return $this->request->handleWithExceptions( function () {
 
-            $response = $this->request->client->get("{$this->entity}/{$this->{$this->url_friendly_id}}/locations");
+            $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/locations");
 
             return collect( json_decode( (string) $response->getBody() )->lot_locations );
 

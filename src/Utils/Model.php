@@ -77,7 +77,7 @@ class Model
     {
         return $this->request->handleWithExceptions( function () {
 
-            return $this->request->client->delete("{$this->entity}/{$this->{$this->url_friendly_id}}");
+            return $this->request->client->delete("{$this->entity}/{$this->url_friendly_id}");
         } );
     }
 
@@ -86,7 +86,7 @@ class Model
 
         return $this->request->handleWithExceptions( function () use ( $data ) {
 
-            $response = $this->request->client->put("{$this->entity}/{$this->{$this->url_friendly_id}}", [
+            $response = $this->request->client->put("{$this->entity}/{$this->url_friendly_id}", [
                 'json' => $data,
             ]);
 

@@ -22,7 +22,7 @@ class Order extends Model
     public function getPDF()
     {
         return $this->request->handleWithExceptions( function () {
-            return $this->request->client->get("{$this->entity}/{$this->{$this->url_friendly_id}}.pdf")->getBody()
+            return $this->request->client->get("{$this->entity}/{$this->url_friendly_id}.pdf")->getBody()
                 ->getContents();
         } );
     }
@@ -32,7 +32,7 @@ class Order extends Model
 
         return $this->request->handleWithExceptions( function () {
 
-            return $this->request->client->post("{$this->entity}/{$this->{$this->url_friendly_id}}/reopen")
+            return $this->request->client->post("{$this->entity}/{$this->url_friendly_id}/reopen")
                 ->getBody()
                 ->getContents();
         } );
@@ -42,7 +42,7 @@ class Order extends Model
     {
         return $this->request->handleWithExceptions(function () {
 
-            $response = json_decode((string)$this->request->client->post("{$this->entity}/{$this->{$this->url_friendly_id}}/create-shipment")
+            $response = json_decode((string)$this->request->client->post("{$this->entity}/{$this->url_friendly_id}/create-shipment")
                 ->getBody());
 
             return new OrderShipment($this->request, $response->order_shipment);
@@ -56,7 +56,7 @@ class Order extends Model
             $builder = new OrderShipmentBuilder($this->request);
 
             return $builder->get([
-                ['order_number', '=', $this->{$this->url_friendly_id}],
+                ['order_number', '=', $this->url_friendly_id],
             ]);
         });
     }
@@ -71,7 +71,7 @@ class Order extends Model
     {
         return $this->request->handleWithExceptions(function () use ($book) {
 
-            $response = json_decode((string)$this->request->client->post("{$this->entity}/{$this->{$this->url_friendly_id}}/convert-to-invoice?book=" . (($book === true) ? 'true' : 'false'))
+            $response = json_decode((string)$this->request->client->post("{$this->entity}/{$this->url_friendly_id}/convert-to-invoice?book=" . (($book === true) ? 'true' : 'false'))
                 ->getBody());
 
             $invoice = (new CustomerInvoiceBuilder($this->request))->find($response->invoice_id);
@@ -85,7 +85,7 @@ class Order extends Model
         return $this->request->handleWithExceptions(function () {
 
             $builder = new OrderNoteBuilder($this->request);
-            $builder->setEntity(str_replace(':number', $this->{$this->url_friendly_id}, $builder->getEntity()));
+            $builder->setEntity(str_replace(':number', $this->url_friendly_id, $builder->getEntity()));
 
             return $builder->get();
         });
