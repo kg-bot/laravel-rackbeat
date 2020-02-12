@@ -13,8 +13,8 @@ class PurchaseOrder extends Model
     public function getPDF()
     {
         return $this->request->handleWithExceptions( function () {
-            return $this->request->client->get( "{$this->entity}/{$this->{$this->primaryKey}}.pdf" )->getBody()
-                                         ->getContents();
+            return $this->request->client->get("{$this->entity}/{$this->{$this->url_friendly_id}}.pdf")->getBody()
+                ->getContents();
         } );
     }
 
@@ -23,9 +23,9 @@ class PurchaseOrder extends Model
 
         return $this->request->handleWithExceptions( function () {
 
-            return $this->request->client->post( "{$this->entity}/{$this->{$this->primaryKey}}/reopen" )
-                                         ->getBody()
-                                         ->getContents();
+            return $this->request->client->post("{$this->entity}/{$this->{$this->url_friendly_id}}/reopen")
+                ->getBody()
+                ->getContents();
         } );
     }
 }

@@ -22,7 +22,7 @@ class Customer extends Model
     {
         return $this->request->handleWithExceptions(function () {
 
-            $builder = new CustomerContactBuilder($this->request, $this->{$this->primaryKey});
+            $builder = new CustomerContactBuilder($this->request, $this->{$this->url_friendly_id});
 
             return $builder->get();
         });

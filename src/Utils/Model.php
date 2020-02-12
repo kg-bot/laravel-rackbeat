@@ -13,6 +13,7 @@ class Model
 {
     protected $entity;
     protected $primaryKey;
+    protected $url_friendly_id;
     protected $modelClass = self::class;
     protected $fillable   = [];
 
@@ -45,7 +46,7 @@ class Model
     {
         if ($attribute === $this->primaryKey) {
 
-            $value = rawurlencode(rawurlencode($value));
+            $this->url_friendly_id = rawurldecode(rawurldecode($value));
         }
 
         $this->{$attribute} = $value;
@@ -76,7 +77,7 @@ class Model
     {
         return $this->request->handleWithExceptions( function () {
 
-            return $this->request->client->delete( "{$this->entity}/{$this->{$this->primaryKey}}" );
+            return $this->request->client->delete("{$this->entity}/{$this->{$this->url_friendly_id}}");
         } );
     }
 
@@ -85,9 +86,9 @@ class Model
 
         return $this->request->handleWithExceptions( function () use ( $data ) {
 
-            $response = $this->request->client->put( "{$this->entity}/{$this->{$this->primaryKey}}", [
+            $response = $this->request->client->put("{$this->entity}/{$this->{$this->url_friendly_id}}", [
                 'json' => $data,
-            ] );
+            ]);
 
             $responseData = collect( json_decode( (string) $response->getBody() ) );
 
