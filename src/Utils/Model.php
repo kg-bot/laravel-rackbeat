@@ -46,7 +46,7 @@ class Model
     {
         if ($attribute === $this->primaryKey) {
 
-            $this->url_friendly_id = rawurldecode(rawurldecode($value));
+            $this->url_friendly_id = rawurlencode(rawurlencode($value));
         }
 
         $this->{$attribute} = $value;
