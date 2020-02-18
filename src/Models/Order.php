@@ -67,12 +67,13 @@ class Order extends Model
      * @throws \Rackbeat\Exceptions\RackbeatClientException
      * @throws \Rackbeat\Exceptions\RackbeatRequestException
      */
-    public function convertToInvoice($book = false)
+    public function convertToInvoice($book = false, $request = [])
     {
-        return $this->request->handleWithExceptions(function () use ($book) {
+        return $this->request->handleWithExceptions(function () use ($book, $request) {
 
-            $response = json_decode((string)$this->request->client->post("{$this->entity}/{$this->url_friendly_id}/convert-to-invoice?book=" . (($book === true) ? 'true' : 'false'))
-                ->getBody());
+            $response = json_decode((string)$this->request->client->post("{$this->entity}/{$this->url_friendly_id}/convert-to-invoice?book=" . (($book === true) ? 'true' : 'false'), [
+                'json' => $request,
+            ])->getBody(), false);
 
             $invoice = (new CustomerInvoiceBuilder($this->request))->find($response->invoice_id);
 
