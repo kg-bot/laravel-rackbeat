@@ -25,6 +25,7 @@ use Rackbeat\Builders\ProductGroupBuilder;
 use Rackbeat\Builders\ProductionOrderBuilder;
 use Rackbeat\Builders\PurchaseOrderBuilder;
 use Rackbeat\Builders\PurchaseOrderReceiptBuilder;
+use Rackbeat\Builders\SettingsBuilder;
 use Rackbeat\Builders\SupplierBuilder;
 use Rackbeat\Builders\SupplierGroupBuilder;
 use Rackbeat\Builders\SupplierInvoiceBuilder;
@@ -261,6 +262,14 @@ class Rackbeat
     public function customer_contacts()
     {
         return new CustomerContactBuilder($this->request);
+    }
+
+    /**
+     * @return SettingsBuilder
+     */
+    public function settings()
+    {
+        return new SettingsBuilder($this->request);
     }
 
     /**
