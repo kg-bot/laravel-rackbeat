@@ -18,7 +18,7 @@ class Builder
     protected $entity;
     /** @var Model */
     protected $model;
-    private   $request;
+    protected $request;
 
     public function __construct(Request $request )
     {
