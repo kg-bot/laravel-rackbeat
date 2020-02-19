@@ -16,7 +16,7 @@ class Settings extends Model
 {
 
     protected $entity = 'settings';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'identifier';
 
     public function delete()
     {
