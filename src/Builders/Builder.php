@@ -87,7 +87,7 @@ class Builder
                 $sign = !empty($filter[2]) ? $filter[1] : '=';
                 $value = $filter[2] ?? $filter[1];
 
-                $urlFilters .= $filter[0] . $sign . rawurlencode(rawurlencode($value));
+                $urlFilters .= $filter[0] . $sign . urlencode($value);
 
                 if (count($filters) > $i) {
 
