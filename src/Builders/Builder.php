@@ -84,9 +84,12 @@ class Builder
 
             foreach ($filters as $filter ) {
 
-                $urlFilters .= $filter[ 0 ] . $filter[ 1 ] . $filter[ 2 ] ?? '=';
+                $sign = !empty($filter[2]) ? $filter[1] : '=';
+                $value = $filter[2] ?? $filter[1];
 
-                if ( count( $filters ) > $i ) {
+                $urlFilters .= $filter[0] . $sign . rawurlencode(rawurlencode($value));
+
+                if (count($filters) > $i) {
 
                     $urlFilters .= '&';
                 }
