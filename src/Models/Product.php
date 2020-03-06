@@ -47,9 +47,7 @@ class Product extends Model
             $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/variation-matrix" .
                 $query);
 
-            $html = (string) $response->getBody();
-
-            return $html;
+            return (string)$response->getBody();
         } );
 
     }
@@ -60,9 +58,7 @@ class Product extends Model
 
             $response = $this->request->client->get("variations/{$this->url_friendly_id}/variation-matrix");
 
-            $html = (string) $response->getBody();
-
-            return $html;
+            return (string)$response->getBody();
         } );
     }
 

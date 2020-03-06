@@ -13,18 +13,26 @@ use Rackbeat\Utils\Model;
 
 class OrderShipment extends Model
 {
-    protected $entity     = 'order-shipments';
+    protected $entity = 'order-shipments';
     protected $primaryKey = 'id';
 
-    public function markShipped()
+    /**
+     * Mark shipment as shipped
+     *
+     * @param bool $pick Mark all shipment lines as picked
+     * @return mixed
+     * @throws \Rackbeat\Exceptions\RackbeatClientException
+     * @throws \Rackbeat\Exceptions\RackbeatRequestException
+     */
+    public function markShipped($pick = true)
     {
-        return $this->request->handleWithExceptions(function () {
+        return $this->request->handleWithExceptions(function () use ($pick) {
 
             return $this->request->client->post("orders/shipments/{$this->url_friendly_id}/mark-shipped", [
 
                 'json' => [
 
-                    'pick' => true,
+                    'pick' => $pick,
                 ],
             ])
                 ->getBody()

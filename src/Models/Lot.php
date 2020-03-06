@@ -23,9 +23,7 @@ class Lot extends Model
 
             $response = $this->request->client->get("variations/{$this->url_friendly_id}/variation-matrix");
 
-            $html = (string) $response->getBody();
-
-            return $html;
+            return (string)$response->getBody();
         } );
     }
 
