@@ -64,4 +64,12 @@ class CustomerInvoice extends Model
                 ->getContents();
         });
     }
+
+    public function getPDF()
+    {
+        return $this->request->handleWithExceptions(function () {
+            return $this->request->client->get("{$this->entity}/{$this->url_friendly_id}.pdf")->getBody()
+                ->getContents();
+        });
+    }
 }
