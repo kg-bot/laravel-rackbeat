@@ -36,6 +36,9 @@ class SettingsBuilder extends Builder
         return $this->request->handleWithExceptions(function () {
 
             $response = $this->request->client->get("{$this->entity}");
+
+            $this->request->sleepIfRateLimited($response);
+
             $responseData = json_decode((string)$response->getBody());
             $fetchedItems = collect($responseData);
             $items = collect([]);

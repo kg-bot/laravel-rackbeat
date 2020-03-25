@@ -23,7 +23,9 @@ class Lot extends Model
 
             $response = $this->request->client->get("variations/{$this->url_friendly_id}/variation-matrix");
 
-            return (string)$response->getBody();
+            $this->request->sleepIfRateLimited($response);
+
+            return json_decode((string)$response->getBody());
         } );
     }
 
@@ -33,7 +35,9 @@ class Lot extends Model
 
             $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/locations");
 
-            return collect( json_decode( (string) $response->getBody() )->lot_locations );
+            $this->request->sleepIfRateLimited($response);
+
+            return collect(json_decode((string)$response->getBody())->lot_locations);
 
         } );
     }
@@ -46,10 +50,11 @@ class Lot extends Model
     {
         return $this->request->handleWithExceptions( function () {
 
-            $response =
-                $this->request->client->get( "reports/ledger/{$this->{ $this->primaryKey } }" );
+            $response = $this->request->client->get("reports/ledger/{$this->{ $this->primaryKey } }");
 
-            return collect( json_decode( (string) $response->getBody() )->ledger_items );
+            $this->request->sleepIfRateLimited($response);
+
+            return collect(json_decode((string)$response->getBody())->ledger_items);
 
         } );
     }

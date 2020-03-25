@@ -22,8 +22,11 @@ class Order extends Model
     public function getPDF()
     {
         return $this->request->handleWithExceptions( function () {
-            return $this->request->client->get("{$this->entity}/{$this->url_friendly_id}.pdf")->getBody()
-                ->getContents();
+            $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}.pdf");
+
+            $this->request->sleepIfRateLimited($response);
+
+            return json_decode((string)$response->getBody());
         } );
     }
 
@@ -32,9 +35,11 @@ class Order extends Model
 
         return $this->request->handleWithExceptions( function () {
 
-            return $this->request->client->post("{$this->entity}/{$this->url_friendly_id}/reopen")
-                ->getBody()
-                ->getContents();
+            $response = $this->request->client->post("{$this->entity}/{$this->url_friendly_id}/reopen");
+
+            $this->request->sleepIfRateLimited($response);
+
+            return json_decode((string)$response->getBody());
         } );
     }
 
@@ -42,10 +47,11 @@ class Order extends Model
     {
         return $this->request->handleWithExceptions(function () {
 
-            $response = json_decode((string)$this->request->client->post("{$this->entity}/{$this->url_friendly_id}/create-shipment")
-                ->getBody());
+            $response = $this->request->client->post("{$this->entity}/{$this->url_friendly_id}/create-shipment");
 
-            return new OrderShipment($this->request, $response->order_shipment);
+            $this->request->sleepIfRateLimited($response);
+
+            return new OrderShipment($this->request, json_decode((string)$response->getBody())->order_shipment);
         });
     }
 
@@ -71,13 +77,13 @@ class Order extends Model
     {
         return $this->request->handleWithExceptions(function () use ($book, $request) {
 
-            $response = json_decode((string)$this->request->client->post("{$this->entity}/{$this->url_friendly_id}/convert-to-invoice?book=" . (($book === true) ? 'true' : 'false'), [
+            $response = $this->request->client->post("{$this->entity}/{$this->url_friendly_id}/convert-to-invoice?book=" . (($book === true) ? 'true' : 'false'), [
                 'json' => $request,
-            ])->getBody(), false);
+            ]);
 
-            $invoice = (new CustomerInvoiceBuilder($this->request))->find($response->invoice_id);
+            $this->request->sleepIfRateLimited($response);
 
-            return $invoice;
+            return (new CustomerInvoiceBuilder($this->request))->find(json_decode((string)$response->getBody(), false)->invoice_id);
         });
     }
 

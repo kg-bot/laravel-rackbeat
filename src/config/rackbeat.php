@@ -20,5 +20,6 @@ return [
             ],
         ],
     ],
-    'base_uri' => env( 'RACKBEAT_BASE_URL', 'https://app.rackbeat.com/api/' ),
+    'base_uri' => env('RACKBEAT_BASE_URL', 'https://app.rackbeat.com/api/'),
+    'api_limit' => env('RACKBEAT_API_LIMIT', 480), // Number of allowed requests per minute
 ];

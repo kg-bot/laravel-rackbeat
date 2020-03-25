@@ -42,13 +42,16 @@ class Builder
 
         return $this->request->handleWithExceptions( function () use ( $urlFilters ) {
 
-            $response     = $this->request->client->get( "{$this->entity}{$urlFilters}" );
-            $responseData = json_decode( (string) $response->getBody() );
-            $fetchedItems = collect( $responseData );
-            $items        = collect( [] );
-            $pages        = $responseData->pages;
+            $response = $this->request->client->get("{$this->entity}{$urlFilters}");
 
-            foreach ($fetchedItems->first() as $index => $item ) {
+            $this->request->sleepIfRateLimited($response);
+
+            $responseData = json_decode((string)$response->getBody());
+            $fetchedItems = collect($responseData);
+            $items = collect([]);
+            $pages = $responseData->pages;
+
+            foreach ($fetchedItems->first() as $index => $item) {
 
 
                 /** @var Model $model */
@@ -126,13 +129,16 @@ class Builder
 
             return $this->request->handleWithExceptions( function () use ( $urlFilters ) {
 
-                $response     = $this->request->client->get( "{$this->entity}{$urlFilters}" );
-                $responseData = json_decode( (string) $response->getBody() );
-                $fetchedItems = collect( $responseData );
-                $items        = collect( [] );
-                $pages        = $responseData->pages;
+                $response = $this->request->client->get("{$this->entity}{$urlFilters}");
 
-                foreach ($fetchedItems->first() as $index => $item ) {
+                $this->request->sleepIfRateLimited($response);
+
+                $responseData = json_decode((string)$response->getBody());
+                $fetchedItems = collect($responseData);
+                $items = collect([]);
+                $pages = $responseData->pages;
+
+                foreach ($fetchedItems->first() as $index => $item) {
 
 
                     /** @var Model $model */
@@ -183,9 +189,12 @@ class Builder
         return $this->request->handleWithExceptions(function () use ($id, $urlFilters) {
 
             $response = $this->request->client->get("{$this->entity}/{$id}{$urlFilters}");
-            $responseData = collect( json_decode( (string) $response->getBody() ) );
 
-            return new $this->model( $this->request, $responseData->first() );
+            $this->request->sleepIfRateLimited($response);
+
+            $responseData = collect(json_decode((string)$response->getBody()));
+
+            return new $this->model($this->request, $responseData->first());
         } );
     }
 
@@ -201,13 +210,16 @@ class Builder
     {
         return $this->request->handleWithExceptions( function () use ( $data ) {
 
-            $response = $this->request->client->post( "{$this->entity}", [
+            $response = $this->request->client->post("{$this->entity}", [
                 'json' => $data,
-            ] );
+            ]);
 
-            $responseData = collect( json_decode( (string) $response->getBody() ) );
+            $this->request->sleepIfRateLimited($response);
 
-            return new $this->model( $this->request, $responseData->first() );
+
+            $responseData = collect(json_decode((string)$response->getBody()));
+
+            return new $this->model($this->request, $responseData->first());
         } );
     }
 

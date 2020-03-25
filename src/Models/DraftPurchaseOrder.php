@@ -13,8 +13,11 @@ class DraftPurchaseOrder extends Model
     public function getPDF()
     {
         return $this->request->handleWithExceptions( function () {
-            return $this->request->client->get("{$this->entity}/{$this->url_friendly_id}.pdf")->getBody()
-                ->getContents();
+            $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}.pdf");
+
+            $this->request->sleepIfRateLimited($response);
+
+            return json_decode((string)$response->getBody());
         } );
     }
 }

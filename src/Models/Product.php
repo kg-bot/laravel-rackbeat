@@ -47,7 +47,9 @@ class Product extends Model
             $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/variation-matrix" .
                 $query);
 
-            return (string)$response->getBody();
+            $this->request->sleepIfRateLimited($response);
+
+            return json_decode((string)$response->getBody());
         } );
 
     }
@@ -58,7 +60,9 @@ class Product extends Model
 
             $response = $this->request->client->get("variations/{$this->url_friendly_id}/variation-matrix");
 
-            return (string)$response->getBody();
+            $this->request->sleepIfRateLimited($response);
+
+            return json_decode((string)$response->getBody());
         } );
     }
 
@@ -66,7 +70,11 @@ class Product extends Model
     {
         return $this->request->handleWithExceptions(function () use ($number) {
 
-            $response = json_decode((string)$this->request->client->get("{$this->entity}/{$this->url_friendly_id}/locations" . (($number !== null) ? '/' . $number : ''))->getBody());
+            $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/locations" . (($number !== null) ? '/' . $number : ''));
+
+            $this->request->sleepIfRateLimited($response);
+
+            $response = json_decode((string)$response->getBody());
 
             if (isset($response->product_locations)) {
 
@@ -92,9 +100,11 @@ class Product extends Model
         return $this->request->handleWithExceptions( function () {
 
             $response =
-                $this->request->client->get( "reports/ledger/{$this->{ $this->primaryKey } }" );
+                $this->request->client->get("reports/ledger/{$this->{ $this->primaryKey } }");
 
-            return collect( json_decode( (string) $response->getBody() )->ledger_items );
+            $this->request->sleepIfRateLimited($response);
+
+            return collect(json_decode((string)$response->getBody())->ledger_items);
 
         } );
     }
@@ -104,10 +114,11 @@ class Product extends Model
 
         return $this->request->handleWithExceptions( function () {
 
-            $response =
-                $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/fields");
+            $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/fields");
 
-            return collect( json_decode( (string) $response->getBody() )->field_values );
+            $this->request->sleepIfRateLimited($response);
+
+            return collect(json_decode((string)$response->getBody())->field_values);
 
         } );
     }
