@@ -43,18 +43,27 @@ class Rackbeat
     /**
      * Rackbeat constructor.
      *
-     * @param null  $token   API token
+     * @param null $token API token
      * @param array $options Custom Guzzle options
      * @param array $headers Custom Guzzle headers
+     * @param bool $enable_log
+     * @param null $log_path
      */
-    public function __construct( $token = null, $options = [], $headers = [] )
+    public function __construct($token = null, $options = [], $headers = [], $enable_log = false, $log_path = null)
     {
-        $this->initRequest( $token, $options, $headers );
+        $this->initRequest($token, $options, $headers, $enable_log, $log_path);
     }
 
-    private function initRequest( $token, $options = [], $headers = [] )
+    /**
+     * @param $token
+     * @param array $options
+     * @param array $headers
+     * @param bool $enable_log
+     * @param null $log_path
+     */
+    private function initRequest($token, $options = [], $headers = [], $enable_log = false, $log_path = null)
     {
-        $this->request = new Request( $token, $options, $headers );
+        $this->request = new Request($token, $options, $headers, $enable_log, $log_path);
     }
 
     /**
@@ -62,7 +71,7 @@ class Rackbeat
      */
     public function suppliers()
     {
-        return new SupplierBuilder( $this->request );
+        return new SupplierBuilder($this->request);
     }
 
     public function supplierGroups()
