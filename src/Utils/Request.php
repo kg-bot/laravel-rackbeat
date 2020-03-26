@@ -104,11 +104,14 @@ class Request
      */
     public function sleepIfRateLimited(Response $response)
     {
-        $remaining = (int)$response->getHeader('X-RateLimit-Remaining');
-        $allowed = (int)$response->getHeader('X-RateLimit-Limit');
+        if ($response->hasHeader('X-RateLimit-Remaining')) {
+            $remaining = (int)$response->getHeader('X-RateLimit-Remaining')[0];
+            $allowed = $response->hasHeader('X-RateLimit-Limit') ? (int)$response->getHeader('X-RateLimit-Limit')[0] : Config::get('rackbeat.api_limit', 480);
 
-        if ($remaining === 0) {
-            sleep(60 / Config::get('rackbeat.api_limit') ?? $allowed);
+            if ($remaining === 0) {
+                sleep(60 / $allowed);
+            }
         }
+
     }
 }
