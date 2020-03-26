@@ -21,7 +21,6 @@ class ProductionOrder extends Model
         return $this->request->handleWithExceptions( function () {
             $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}.pdf");
 
-            $this->request->sleepIfRateLimited($response);
 
             return json_decode((string)$response->getBody());
         } );

@@ -8,7 +8,6 @@
 
 namespace Rackbeat\Builders;
 
-use Illuminate\Support\Collection;
 use Rackbeat\Utils\Model;
 use Rackbeat\Utils\Request;
 
@@ -44,7 +43,6 @@ class Builder
 
             $response = $this->request->client->get("{$this->entity}{$urlFilters}");
 
-            $this->request->sleepIfRateLimited($response);
 
             $responseData = json_decode((string)$response->getBody());
             $fetchedItems = collect($responseData);
@@ -131,7 +129,6 @@ class Builder
 
                 $response = $this->request->client->get("{$this->entity}{$urlFilters}");
 
-                $this->request->sleepIfRateLimited($response);
 
                 $responseData = json_decode((string)$response->getBody());
                 $fetchedItems = collect($responseData);
@@ -190,7 +187,6 @@ class Builder
 
             $response = $this->request->client->get("{$this->entity}/{$id}{$urlFilters}");
 
-            $this->request->sleepIfRateLimited($response);
 
             $responseData = collect(json_decode((string)$response->getBody()));
 
@@ -213,8 +209,6 @@ class Builder
             $response = $this->request->client->post("{$this->entity}", [
                 'json' => $data,
             ]);
-
-            $this->request->sleepIfRateLimited($response);
 
 
             $responseData = collect(json_decode((string)$response->getBody()));

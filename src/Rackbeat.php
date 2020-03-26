@@ -279,7 +279,6 @@ class Rackbeat
     {
         $response = $this->request->client->get('self');
 
-        $this->request->sleepIfRateLimited($response);
 
         return json_decode((string)$response->getBody());
     }

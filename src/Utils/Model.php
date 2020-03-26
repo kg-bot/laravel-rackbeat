@@ -79,7 +79,6 @@ class Model
 
             $response = $this->request->client->delete("{$this->entity}/{$this->url_friendly_id}");
 
-            $this->request->sleepIfRateLimited($response);
 
             return json_decode((string)$response->getBody());
         } );
@@ -94,7 +93,6 @@ class Model
                 'json' => $data,
             ]);
 
-            $this->request->sleepIfRateLimited($response);
 
             $responseData = collect(json_decode((string)$response->getBody()));
 

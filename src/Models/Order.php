@@ -24,7 +24,6 @@ class Order extends Model
         return $this->request->handleWithExceptions( function () {
             $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}.pdf");
 
-            $this->request->sleepIfRateLimited($response);
 
             return json_decode((string)$response->getBody());
         } );
@@ -37,7 +36,6 @@ class Order extends Model
 
             $response = $this->request->client->post("{$this->entity}/{$this->url_friendly_id}/reopen");
 
-            $this->request->sleepIfRateLimited($response);
 
             return json_decode((string)$response->getBody());
         } );
@@ -49,7 +47,6 @@ class Order extends Model
 
             $response = $this->request->client->post("{$this->entity}/{$this->url_friendly_id}/create-shipment");
 
-            $this->request->sleepIfRateLimited($response);
 
             return new OrderShipment($this->request, json_decode((string)$response->getBody())->order_shipment);
         });
@@ -81,7 +78,6 @@ class Order extends Model
                 'json' => $request,
             ]);
 
-            $this->request->sleepIfRateLimited($response);
 
             return (new CustomerInvoiceBuilder($this->request))->find(json_decode((string)$response->getBody(), false)->invoice_id);
         });

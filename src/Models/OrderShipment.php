@@ -36,7 +36,6 @@ class OrderShipment extends Model
                 ],
             ]);
 
-            $this->request->sleepIfRateLimited($response);
 
             return json_decode((string)$response->getBody());
         });

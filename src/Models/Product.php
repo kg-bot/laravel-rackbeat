@@ -47,7 +47,6 @@ class Product extends Model
             $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/variation-matrix" .
                 $query);
 
-            $this->request->sleepIfRateLimited($response);
 
             return json_decode((string)$response->getBody());
         } );
@@ -60,7 +59,6 @@ class Product extends Model
 
             $response = $this->request->client->get("variations/{$this->url_friendly_id}/variation-matrix");
 
-            $this->request->sleepIfRateLimited($response);
 
             return json_decode((string)$response->getBody());
         } );
@@ -72,7 +70,6 @@ class Product extends Model
 
             $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/locations" . (($number !== null) ? '/' . $number : ''));
 
-            $this->request->sleepIfRateLimited($response);
 
             $response = json_decode((string)$response->getBody());
 
@@ -102,7 +99,6 @@ class Product extends Model
             $response =
                 $this->request->client->get("reports/ledger/{$this->{ $this->primaryKey } }");
 
-            $this->request->sleepIfRateLimited($response);
 
             return collect(json_decode((string)$response->getBody())->ledger_items);
 
@@ -116,7 +112,6 @@ class Product extends Model
 
             $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/fields");
 
-            $this->request->sleepIfRateLimited($response);
 
             return collect(json_decode((string)$response->getBody())->field_values);
 

@@ -12,10 +12,11 @@ namespace Rackbeat\Utils;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
-use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\HandlerStack;
 use Illuminate\Support\Facades\Config;
 use Rackbeat\Exceptions\RackbeatClientException;
 use Rackbeat\Exceptions\RackbeatRequestException;
+use Spatie\GuzzleRateLimiterMiddleware\RateLimiterMiddleware;
 
 class Request
 {
@@ -41,12 +42,18 @@ class Request
             'Content-Type' => 'application/json; charset=utf8',
             'Authorization' => 'Bearer ' . $token,
         ]);
-        $options      = array_merge( $options, [
+
+        if (!empty($options['handler'])) {
+            $options['handler']->push($this->createThrottleMiddleware());
+        } else {
+            $options['handler'] = HandlerStack::create($this->createThrottleMiddleware());
+        }
+        $options = array_merge($options, [
 
             'base_uri' => Config::get('rackbeat.base_uri'),
             'headers' => $headers,
-        ] );
-        $this->client = new Client( $options );
+        ]);
+        $this->client = new Client($options);
     }
 
     /**
@@ -97,21 +104,8 @@ class Request
         }
     }
 
-    /**
-     * Check to see if we are about to rate limit and pause if necessary.
-     *
-     * @param Response $response
-     */
-    public function sleepIfRateLimited(Response $response)
+    public function createThrottleMiddleware()
     {
-        if ($response->hasHeader('X-RateLimit-Remaining')) {
-            $remaining = (int)$response->getHeader('X-RateLimit-Remaining')[0];
-            $allowed = $response->hasHeader('X-RateLimit-Limit') ? (int)$response->getHeader('X-RateLimit-Limit')[0] : Config::get('rackbeat.api_limit', 480);
-
-            if ($remaining === 0) {
-                sleep(60 / $allowed);
-            }
-        }
-
+        return RateLimiterMiddleware::perMinute(Config::get('rackbeat.api_limit', 480));
     }
 }

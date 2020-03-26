@@ -23,7 +23,6 @@ class Lot extends Model
 
             $response = $this->request->client->get("variations/{$this->url_friendly_id}/variation-matrix");
 
-            $this->request->sleepIfRateLimited($response);
 
             return json_decode((string)$response->getBody());
         } );
@@ -35,7 +34,6 @@ class Lot extends Model
 
             $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/locations");
 
-            $this->request->sleepIfRateLimited($response);
 
             return collect(json_decode((string)$response->getBody())->lot_locations);
 
@@ -52,7 +50,6 @@ class Lot extends Model
 
             $response = $this->request->client->get("reports/ledger/{$this->{ $this->primaryKey } }");
 
-            $this->request->sleepIfRateLimited($response);
 
             return collect(json_decode((string)$response->getBody())->ledger_items);
 
