@@ -108,7 +108,7 @@ class Request
         $allowed = $response->getHeader('X-RateLimit-Limit');
 
         if ((int)$remaining === 1) {
-            sleep(60 / Config::get('rackbeat.api_limit'));
+            sleep(60 / Config::get('rackbeat.api_limit') ?? (int)$allowed);
         }
     }
 }
