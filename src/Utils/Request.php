@@ -46,7 +46,9 @@ class Request
         if (!empty($options['handler'])) {
             $options['handler']->push($this->createThrottleMiddleware());
         } else {
-            $options['handler'] = HandlerStack::create($this->createThrottleMiddleware());
+            $stack = HandlerStack::create();
+            $stack->push($this->createThrottleMiddleware());
+            $options['handler'] = $stack;
         }
         $options = array_merge($options, [
 
