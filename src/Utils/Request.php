@@ -106,6 +106,6 @@ class Request
 
     public function createThrottleMiddleware()
     {
-        return RateLimiterMiddleware::perMinute(Config::get('rackbeat.api_limit', 480));
+        return RateLimiterMiddleware::perMinute(Config::get('rackbeat.api_limit', 480), new RateLimiterStore());
     }
 }
