@@ -28,11 +28,13 @@ class Request
     /**
      * Request constructor.
      *
-     * @param null  $token
+     * @param null $token
      * @param array $options
      * @param array $headers
+     * @param bool $enable_log
+     * @param null $log_path
      */
-    public function __construct( $token = null, $options = [], $headers = [] )
+    public function __construct($token = null, $options = [], $headers = [], $enable_log = false, $log_path = null)
     {
         $token = $token ?? Config::get('rackbeat.token');
         $headers = array_merge($headers, [
@@ -43,13 +45,8 @@ class Request
             'Authorization' => 'Bearer ' . $token,
         ]);
 
-        if (!empty($options['handler'])) {
-            $options['handler']->push($this->createThrottleMiddleware());
-        } else {
-            $stack = HandlerStack::create();
-            $stack->push($this->createThrottleMiddleware());
-            $options['handler'] = $stack;
-        }
+        $options = $this->addCustomMiddlewares($options, $enable_log, $log_path);
+
         $options = array_merge($options, [
 
             'base_uri' => Config::get('rackbeat.base_uri'),
@@ -109,5 +106,31 @@ class Request
     public function createThrottleMiddleware()
     {
         return RateLimiterMiddleware::perMinute(Config::get('rackbeat.api_limit', 480), new RateLimiterStore());
+    }
+
+    public function createLoggerMiddleware($log_path = null)
+    {
+        $logger = new GuzzleLoggerInstance($log_path);
+
+        return $logger->getStack();
+    }
+
+    public function addCustomMiddlewares(array $options, $log, $log_path)
+    {
+        if (!empty($options['handler'])) {
+            $options['handler']->push($this->createThrottleMiddleware());
+        } else {
+            $stack = HandlerStack::create();
+
+            $stack->push($this->createThrottleMiddleware());
+            $options['handler'] = $stack;
+        }
+
+        if ($log) {
+
+            $options['handler']->push((new  GuzzleLoggerInstance($log_path))->getStack());
+        }
+
+        return $options;
     }
 }
