@@ -13,7 +13,11 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\MessageFormatter;
+use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Config;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Rackbeat\Exceptions\RackbeatClientException;
 use Rackbeat\Exceptions\RackbeatRequestException;
 use Spatie\GuzzleRateLimiterMiddleware\RateLimiterMiddleware;
@@ -110,9 +114,20 @@ class Request
 
     public function createLoggerMiddleware($log_path = null)
     {
-        $logger = new GuzzleLoggerInstance($log_path);
+        $log_path = $log_path ?? 'guzzle-logger.log';
 
-        return $logger->getStack();
+        $logger = new Logger('GuzzleCustomLogger');
+        $location = storage_path('logs/' . $log_path);
+        $logger->pushHandler(new StreamHandler($location, Logger::DEBUG));
+
+        $format =
+            '{method} {uri} - {target} - {hostname} HTTP/{version} .......... ' .
+            'REQUEST HEADERS: {req_headers} ....... REQUEST: {req_body} ' .
+            '......... RESPONSE HEADERS: {res_headers} ........... RESPONSE: {code} - {res_body}';
+        return Middleware::log(
+            $logger,
+            new MessageFormatter($format)
+        );
     }
 
     public function addCustomMiddlewares(array $options, $log, $log_path)
@@ -128,7 +143,7 @@ class Request
 
         if ($log) {
 
-            $options['handler']->push((new  GuzzleLoggerInstance($log_path))->getStack());
+            $options['handler']->push($this->createLoggerMiddleware($log_path));
         }
 
         return $options;
