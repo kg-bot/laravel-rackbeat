@@ -7,6 +7,7 @@ use Rackbeat\Builders\CustomerBuilder;
 use Rackbeat\Builders\CustomerContactBuilder;
 use Rackbeat\Builders\CustomerGroupBuilder;
 use Rackbeat\Builders\CustomerInvoiceBuilder;
+use Rackbeat\Builders\DeliveryTermBuilder;
 use Rackbeat\Builders\DraftOrderBuilder;
 use Rackbeat\Builders\DraftPurchaseOrderBuilder;
 use Rackbeat\Builders\EmployeeBuilder;
@@ -164,24 +165,29 @@ class Rackbeat
      */
     public function employees()
     {
-        return new EmployeeBuilder( $this->request );
+	    return new EmployeeBuilder( $this->request );
     }
 
-    /**
-     * @return \Rackbeat\Builders\PaymentTermBuilder
-     */
-    public function paymentTerms()
-    {
-        return new PaymentTermBuilder( $this->request );
-    }
+	/**
+	 * @return \Rackbeat\Builders\PaymentTermBuilder
+	 */
+	public function paymentTerms() {
+		return new PaymentTermBuilder( $this->request );
+	}
 
-    /**
-     * @return \Rackbeat\Builders\ProductionOrderBuilder
-     */
-    public function production_orders()
-    {
-        return new ProductionOrderBuilder( $this->request );
-    }
+	/**
+	 * @return DeliveryTermBuilder
+	 */
+	public function deliveryTerms() {
+		return new DeliveryTermBuilder( $this->request );
+	}
+
+	/**
+	 * @return \Rackbeat\Builders\ProductionOrderBuilder
+	 */
+	public function production_orders() {
+		return new ProductionOrderBuilder( $this->request );
+	}
 
 	/**
 	 * @return \Rackbeat\Builders\PurchaseOrderBuilder
