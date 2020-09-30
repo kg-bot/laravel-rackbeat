@@ -6,7 +6,8 @@ use Rackbeat\Utils\Model;
 
 class OrderNote extends Model
 {
-    protected $entity = 'orders/:number/notes';
-    protected $primaryKey = 'id';
+	protected $entity     = 'orders/:number/notes';
+	protected $primaryKey = 'id';
+	protected $modelClass = self::class;
 
 }

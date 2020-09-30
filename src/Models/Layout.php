@@ -7,6 +7,7 @@ use Rackbeat\Utils\Model;
 
 class Layout extends Model
 {
-    protected $entity = 'layouts';
-    protected $primaryKey = 'number';
+	protected $entity     = 'layouts';
+	protected $primaryKey = 'number';
+	protected $modelClass = self::class;
 }

@@ -13,6 +13,7 @@ use Rackbeat\Utils\Model;
 
 class PaymentTerm extends Model
 {
-    protected $entity     = 'payment-terms';
-    protected $primaryKey = 'number';
+	protected $entity     = 'payment-terms';
+	protected $primaryKey = 'number';
+	protected $modelClass = self::class;
 }

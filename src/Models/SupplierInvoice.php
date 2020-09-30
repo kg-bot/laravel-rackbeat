@@ -16,6 +16,7 @@ class SupplierInvoice extends Model
 
 	protected $entity     = 'supplier-invoices';
 	protected $primaryKey = 'number';
+	protected $modelClass = self::class;
 
 	/**
 	 * Book supplier invoice

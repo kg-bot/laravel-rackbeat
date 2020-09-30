@@ -14,16 +14,16 @@ use Rackbeat\Utils\Model;
 
 class Variation extends Model
 {
-    public    $number;
-    protected $entity     = 'variations';
-    protected $primaryKey = 'number';
+	public    $number;
+	protected $entity     = 'variations';
+	protected $primaryKey = 'number';
+	protected $modelClass = self::class;
 
-    public function types()
-    {
-        $types      = new TypeBuilder( $this->request );
-        $old_entity = $types->getEntity();
-        $types->setEntity(str_replace(':variation_number', $this->url_friendly_id, $old_entity));
+	public function types() {
+		$types      = new TypeBuilder( $this->request );
+		$old_entity = $types->getEntity();
+		$types->setEntity( str_replace( ':variation_number', $this->url_friendly_id, $old_entity ) );
 
-        return $types;
-    }
+		return $types;
+	}
 }

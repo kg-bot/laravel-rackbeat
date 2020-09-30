@@ -13,6 +13,7 @@ use Rackbeat\Utils\Model;
 
 class InventoryMovement extends Model
 {
-    protected $entity     = 'inventory-movements';
-    protected $primaryKey = 'id';
+	protected $entity     = 'inventory-movements';
+	protected $primaryKey = 'id';
+	protected $modelClass = self::class;
 }

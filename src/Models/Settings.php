@@ -15,12 +15,12 @@ use Rackbeat\Utils\Model;
 class Settings extends Model
 {
 
-    protected $entity = 'settings';
-    protected $primaryKey = 'identifier';
+	protected $entity     = 'settings';
+	protected $primaryKey = 'identifier';
+	protected $modelClass = self::class;
 
-    public function delete()
-    {
-        throw new MethodNotImplemented();
-    }
+	public function delete() {
+		throw new MethodNotImplemented();
+	}
 
 }

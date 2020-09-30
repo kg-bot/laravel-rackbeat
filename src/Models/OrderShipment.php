@@ -13,18 +13,20 @@ use Rackbeat\Utils\Model;
 
 class OrderShipment extends Model
 {
-    protected $entity = 'order-shipments';
-    protected $primaryKey = 'id';
+	protected $entity     = 'order-shipments';
+	protected $primaryKey = 'id';
+	protected $modelClass = self::class;
 
-    /**
-     * Mark shipment as shipped
-     *
-     * @param bool $pick Mark all shipment lines as picked
-     * @return mixed
-     * @throws \Rackbeat\Exceptions\RackbeatClientException
-     * @throws \Rackbeat\Exceptions\RackbeatRequestException
-     */
-    public function markShipped($pick = true)
+	/**
+	 * Mark shipment as shipped
+	 *
+	 * @param bool $pick Mark all shipment lines as picked
+	 *
+	 * @return mixed
+	 * @throws \Rackbeat\Exceptions\RackbeatClientException
+	 * @throws \Rackbeat\Exceptions\RackbeatRequestException
+	 */
+	public function markShipped( $pick = true )
     {
         return $this->request->handleWithExceptions(function () use ($pick) {
 

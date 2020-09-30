@@ -15,16 +15,16 @@ use Rackbeat\Utils\Model;
 class Customer extends Model
 {
 
-    protected $entity = 'customers';
-    protected $primaryKey = 'number';
+	protected $entity     = 'customers';
+	protected $primaryKey = 'number';
+	protected $modelClass = self::class;
 
-    public function contacts()
-    {
-        return $this->request->handleWithExceptions(function () {
+	public function contacts() {
+		return $this->request->handleWithExceptions( function () {
 
-            $builder = new CustomerContactBuilder($this->request, $this->url_friendly_id);
+			$builder = new CustomerContactBuilder( $this->request, $this->url_friendly_id );
 
-            return $builder->get();
-        });
-    }
+			return $builder->get();
+		} );
+	}
 }

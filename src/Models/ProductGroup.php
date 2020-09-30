@@ -13,7 +13,8 @@ use Rackbeat\Utils\Model;
 
 class ProductGroup extends Model
 {
-    public    $number;
-    protected $entity     = 'product-groups';
-    protected $primaryKey = 'number';
+	public    $number;
+	protected $entity     = 'product-groups';
+	protected $primaryKey = 'number';
+	protected $modelClass = self::class;
 }

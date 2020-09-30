@@ -15,16 +15,15 @@ use Rackbeat\Utils\Model;
 class Plugin extends Model
 {
 
-    protected $entity     = 'user-account-plugins';
-    protected $primaryKey = 'id';
+	protected $entity     = 'user-account-plugins';
+	protected $primaryKey = 'id';
+	protected $modelClass = self::class;
 
-    public function delete()
-    {
-        throw new MethodNotImplemented();
-    }
+	public function delete() {
+		throw new MethodNotImplemented();
+	}
 
-    public function update( $data = [] )
-    {
-        throw new MethodNotImplemented();
-    }
+	public function update( $data = [] ) {
+		throw new MethodNotImplemented();
+	}
 }

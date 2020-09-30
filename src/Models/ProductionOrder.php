@@ -13,16 +13,16 @@ use Rackbeat\Utils\Model;
 
 class ProductionOrder extends Model
 {
-    protected $entity     = 'production-orders';
-    protected $primaryKey = 'number';
+	protected $entity     = 'production-orders';
+	protected $primaryKey = 'number';
+	protected $modelClass = self::class;
 
-    public function getPDF()
-    {
-        return $this->request->handleWithExceptions( function () {
-            $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}.pdf");
+	public function getPDF() {
+		return $this->request->handleWithExceptions( function () {
+			$response = $this->request->client->get( "{$this->entity}/{$this->url_friendly_id}.pdf" );
 
 
-            return json_decode((string)$response->getBody());
-        } );
-    }
+			return json_decode( (string) $response->getBody() );
+		} );
+	}
 }

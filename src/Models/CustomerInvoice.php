@@ -14,18 +14,19 @@ use Rackbeat\Utils\Model;
 class CustomerInvoice extends Model
 {
 
-    protected $entity = 'customer-invoices';
-    protected $primaryKey = 'number';
+	protected $entity     = 'customer-invoices';
+	protected $primaryKey = 'number';
+	protected $modelClass = self::class;
 
-    /**
-     * Book customer invoice
-     *
-     * @param bool|array $send_email [optional] <p>
-     * This parameter indicates should the mail be sent to customer,
-     * if you send it as array it must be in format like this:
-     * [
-     *     "send" => false,
-     *     "body" => "Something",
+	/**
+	 * Book customer invoice
+	 *
+	 * @param bool|array $send_email [optional] <p>
+	 *                               This parameter indicates should the mail be sent to customer,
+	 *                               if you send it as array it must be in format like this:
+	 *                               [
+	 *                               "send" => false,
+	 *                               "body" => "Something",
      *     "subject" => "YOUR SUBJECT",
      *     "receivers" => [
      *         "to" => [ "email@here.com"],

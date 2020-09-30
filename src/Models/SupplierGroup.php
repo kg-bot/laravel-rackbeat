@@ -13,6 +13,7 @@ use Rackbeat\Utils\Model;
 
 class SupplierGroup extends Model
 {
-    protected $entity     = 'supplier-groups';
-    protected $primaryKey = 'number';
+	protected $entity     = 'supplier-groups';
+	protected $primaryKey = 'number';
+	protected $modelClass = self::class;
 }

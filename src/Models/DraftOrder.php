@@ -17,6 +17,7 @@ class DraftOrder extends Model
 {
 	protected $entity     = 'orders/drafts';
 	protected $primaryKey = 'number';
+	protected $modelClass = self::class;
 
 	public function getPDF() {
 		return $this->request->handleWithExceptions( function () {

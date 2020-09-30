@@ -17,6 +17,7 @@ class Product extends Model
 	public    $number;
 	protected $entity     = 'products';
 	protected $primaryKey = 'number';
+	protected $modelClass = self::class;
 
 	public function inventoryMatrix( $location_id = null, array $filter = null ) {
 		return $this->request->handleWithExceptions( function () use ( $location_id, $filter ) {
@@ -24,7 +25,7 @@ class Product extends Model
 			$query = '';
 
 			// We need to use location filter if user has provided any
-			if ( !is_null( $location_id ) ) {
+			if ( ! is_null( $location_id ) ) {
 
 				$query .= '?location_id=' . $location_id;
 			}

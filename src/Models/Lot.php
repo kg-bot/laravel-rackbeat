@@ -13,19 +13,19 @@ use Rackbeat\Utils\Model;
 
 class Lot extends Model
 {
-    public    $number;
-    protected $entity     = 'lots';
-    protected $primaryKey = 'number';
+	public    $number;
+	protected $entity     = 'lots';
+	protected $primaryKey = 'number';
+	protected $modelClass = self::class;
 
-    public function variations( $variation_id = 1001 )
-    {
-        return $this->request->handleWithExceptions( function () use ( $variation_id ) {
+	public function variations( $variation_id = 1001 ) {
+		return $this->request->handleWithExceptions( function () use ( $variation_id ) {
 
-            $response = $this->request->client->get("variations/{$this->url_friendly_id}/variation-matrix");
+			$response = $this->request->client->get( "variations/{$this->url_friendly_id}/variation-matrix" );
 
 
-            return json_decode((string)$response->getBody());
-        } );
+			return json_decode( (string) $response->getBody() );
+		} );
     }
 
     public function location()

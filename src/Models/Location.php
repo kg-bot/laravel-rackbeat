@@ -13,13 +13,14 @@ use Rackbeat\Utils\Model;
 
 class Location extends Model
 {
-    protected $entity     = 'locations';
-    protected $primaryKey = 'number';
-    protected $fillable   = [
+	protected $entity     = 'locations';
+	protected $primaryKey = 'number';
+	protected $modelClass = self::class;
+	protected $fillable   = [
 
-        "name",
-        "is_default",
-        "number",
-        "parent_id",
-    ];
+		"name",
+		"is_default",
+		"number",
+		"parent_id",
+	];
 }

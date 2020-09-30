@@ -13,6 +13,7 @@ use Rackbeat\Utils\Model;
 class CustomerContact extends Model
 {
 
-    protected $entity = 'customers/{customer}/contacts';
-    protected $primaryKey = 'number';
+	protected $entity     = 'customers/{customer}/contacts';
+	protected $primaryKey = 'number';
+	protected $modelClass = self::class;
 }
