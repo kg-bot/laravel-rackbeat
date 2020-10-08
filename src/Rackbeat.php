@@ -15,6 +15,7 @@ use Rackbeat\Builders\FieldBuilder;
 use Rackbeat\Builders\InventoryAdjustmentBuilder;
 use Rackbeat\Builders\InventoryMovementBuilder;
 use Rackbeat\Builders\LayoutBuilder;
+use Rackbeat\Builders\LineableBuilder;
 use Rackbeat\Builders\LocationBuilder;
 use Rackbeat\Builders\LotBuilder;
 use Rackbeat\Builders\OrderBuilder;
@@ -62,30 +63,29 @@ class Rackbeat
      * @param bool $enable_log
      * @param null $log_path
      */
-    private function initRequest($token, $options = [], $headers = [], $enable_log = false, $log_path = null)
-    {
-        $this->request = new Request($token, $options, $headers, $enable_log, $log_path);
-    }
+	private function initRequest( $token, $options = [], $headers = [], $enable_log = false, $log_path = null ): void {
+		$this->request = new Request( $token, $options, $headers, $enable_log, $log_path );
+	}
 
-    /**
-     * @return \Rackbeat\Builders\SupplierBuilder
-     */
-    public function suppliers()
-    {
-        return new SupplierBuilder($this->request);
-    }
+	/**
+	 * @return \Rackbeat\Builders\SupplierBuilder
+	 */
+	public function suppliers(): SupplierBuilder {
+		return new SupplierBuilder( $this->request );
+	}
 
-    public function supplierGroups()
-    {
-        return new SupplierGroupBuilder( $this->request );
-    }
+	/**
+	 * @return SupplierGroupBuilder
+	 */
+	public function supplierGroups(): SupplierGroupBuilder {
+		return new SupplierGroupBuilder( $this->request );
+	}
 
-    /**
-     * @return \Rackbeat\Builders\LocationBuilder
-     */
-    public function locations()
-    {
-        return new LocationBuilder( $this->request );
+	/**
+	 * @return \Rackbeat\Builders\LocationBuilder
+	 */
+	public function locations() {
+		return new LocationBuilder( $this->request );
     }
 
     /**
@@ -274,27 +274,31 @@ class Rackbeat
      *
      * @return CustomerContactBuilder
      */
-    public function customer_contacts()
-    {
-        return new CustomerContactBuilder($this->request);
+    public function customer_contacts() {
+	    return new CustomerContactBuilder( $this->request );
     }
 
-    /**
-     * @return SettingsBuilder
-     */
-    public function settings()
-    {
-        return new SettingsBuilder($this->request);
-    }
+	/**
+	 * @return SettingsBuilder
+	 */
+	public function settings(): SettingsBuilder {
+		return new SettingsBuilder( $this->request );
+	}
 
-    /**
-     * @return mixed
-     */
-    public function self()
-    {
-        $response = $this->request->client->get('self');
+	/**
+	 * @return LineableBuilder
+	 */
+	public function lineables(): LineableBuilder {
+		return new LineableBuilder( $this->request );
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function self() {
+		$response = $this->request->client->get( 'self' );
 
 
-        return json_decode((string)$response->getBody());
+		return json_decode( (string) $response->getBody() );
     }
 }

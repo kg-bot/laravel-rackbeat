@@ -14,218 +14,208 @@ use Rackbeat\Utils\Request;
 
 class Builder
 {
-    protected $entity;
-    /** @var Model */
-    protected $model;
-    protected $request;
+	protected $entity;
+	/** @var Model */
+	protected $model;
+	protected $request;
 
-    public function __construct(Request $request )
-    {
-        $this->request = $request;
-    }
+	public function __construct( Request $request ) {
+		$this->request = $request;
+	}
 
 
-    /**
-     * Get only first page of resources, you can also set query parameters, default limit is 1000
-     *
-     * @param array $filters
-     * @return mixed
-     * @throws \Rackbeat\Exceptions\RackbeatClientException
-     * @throws \Rackbeat\Exceptions\RackbeatRequestException
-     */
-    public function get($filters = [] )
-    {
-        $filters[] = [ 'limit', '=', 1000 ];
+	/**
+	 * Get only first page of resources, you can also set query parameters, default limit is 1000
+	 *
+	 * @param array $filters
+	 *
+	 * @return mixed
+	 * @throws \Rackbeat\Exceptions\RackbeatClientException
+	 * @throws \Rackbeat\Exceptions\RackbeatRequestException
+	 */
+	public function get( $filters = [] ) {
+		$filters[] = [ 'limit', '=', 1000 ];
 
-        $urlFilters = $this->parseFilters( $filters );
+		$urlFilters = $this->parseFilters( $filters );
 
-        return $this->request->handleWithExceptions( function () use ( $urlFilters ) {
+		return $this->request->handleWithExceptions( function () use ( $urlFilters ) {
 
-            $response = $this->request->client->get("{$this->entity}{$urlFilters}");
+			$response = $this->request->client->get( "{$this->entity}{$urlFilters}" );
 
 
-            $responseData = json_decode((string)$response->getBody());
-            $fetchedItems = collect($responseData);
-            $items = collect([]);
-            $pages = $responseData->pages;
+			$responseData = json_decode( (string) $response->getBody() );
+			$fetchedItems = collect( $responseData );
+			$items        = collect( [] );
+			$pages        = $responseData->pages;
 
-            foreach ($fetchedItems->first() as $index => $item) {
+			foreach ( $fetchedItems->first() as $index => $item ) {
 
+				$modelClass = $this->getModelClass( $item );
+				$model      = new $modelClass( $this->request, $item );
 
-                /** @var Model $model */
-                $model = new $this->model( $this->request, $item );
+				$items->push( $model );
+			}
 
-                $items->push( $model );
+			return $items;
+		} );
+	}
 
+	protected function parseFilters( $filters = [] ) {
 
-            }
+		$limit = array_search( 'limit', array_column( $filters, 0 ) );
+		if ( $limit !== false && $limit !== ( count( $filters ) - 1 ) ) {
 
-            return $items;
-        } );
-    }
+			unset( $filters[ count( $filters ) - 1 ] );
+		}
 
-    protected function parseFilters($filters = [] )
-    {
+		$urlFilters = '';
 
-        $limit = array_search('limit', array_column($filters, 0));
-        if ($limit !== false && $limit !== (count($filters) - 1)) {
+		if ( count( $filters ) > 0 ) {
 
-            unset($filters[count($filters) - 1]);
-        }
+			$filters = array_unique( $filters, SORT_REGULAR );
 
-        $urlFilters = '';
+			$i = 1;
 
-        if ( count( $filters ) > 0 ) {
+			$urlFilters .= '?';
 
-            $filters = array_unique($filters, SORT_REGULAR);
+			foreach ( $filters as $filter ) {
 
-            $i = 1;
+				$sign  = ! empty( $filter[2] ) ? $filter[1] : '=';
+				$value = $filter[2] ?? $filter[1];
 
-            $urlFilters .= '?';
+				$urlFilters .= $filter[0] . $sign . urlencode( $value );
 
-            foreach ($filters as $filter ) {
+				if ( count( $filters ) > $i ) {
 
-                $sign = !empty($filter[2]) ? $filter[1] : '=';
-                $value = $filter[2] ?? $filter[1];
+					$urlFilters .= '&';
+				}
 
-                $urlFilters .= $filter[0] . $sign . urlencode($value);
+				$i++;
+			}
+		}
 
-                if (count($filters) > $i) {
+		return $urlFilters;
+	}
 
-                    $urlFilters .= '&';
-                }
+	/**
+	 * It will iterate over all pages until it does not receive empty response, you can also set query parameters,
+	 * default limit per page is 1000
+	 *
+	 * @param array $filters
+	 *
+	 * @return mixed
+	 */
+	public function all( $filters = [] ) {
+		$page = 1;
 
-                $i++;
-            }
-        }
+		$items = collect();
 
-        return $urlFilters;
-    }
+		$response = function ( $filters, $page ) {
 
-    /**
-     * It will iterate over all pages until it does not receive empty response, you can also set query parameters,
-     * default limit per page is 1000
-     *
-     * @param array $filters
-     * @return mixed
-     */
-    public function all($filters = [] )
-    {
-        $page = 1;
-
-        $items = collect();
-
-        $response = function ( $filters, $page ) {
-
-            /**
-             * Default filters, limit must be always set last otherwise it will not work
-             */
-            $filters[] = [ 'page', '=', $page ];
-            $filters[] = ['limit', '=', 1000];
-
-            $urlFilters = $this->parseFilters( $filters );
-
-            return $this->request->handleWithExceptions( function () use ( $urlFilters ) {
-
-                $response = $this->request->client->get("{$this->entity}{$urlFilters}");
-
-
-                $responseData = json_decode((string)$response->getBody());
-                $fetchedItems = collect($responseData);
-                $items = collect([]);
-                $pages = $responseData->pages;
-
-                foreach ($fetchedItems->first() as $index => $item) {
-
-
-                    /** @var Model $model */
-                    $model = new $this->model( $this->request, $item );
-
-                    $items->push( $model );
-
-
-                }
-
-                return (object) [
-
-                    'items' => $items,
-                    'pages' => $pages,
-                ];
-            } );
-        };
-
-        do {
-
-            $resp = $response( $filters, $page );
-
-            $items = $items->merge( $resp->items );
-            $page++;
-            sleep( 2 );
-
-        } while ( $page <= $resp->pages );
-
-
-        return $items;
-
-    }
-
-    /**
-     * Find single resource by its id filed, it also accepts query parameters
-     *
-     * @param $id
-     * @param array $filters
-     * @return mixed
-     * @throws \Rackbeat\Exceptions\RackbeatClientException
-     * @throws \Rackbeat\Exceptions\RackbeatRequestException
-     */
-    public function find($id, $filters = [])
-    {
-        $urlFilters = $this->parseFilters($filters);
-        $id = rawurlencode(rawurlencode($id));
-
-        return $this->request->handleWithExceptions(function () use ($id, $urlFilters) {
-
-            $response = $this->request->client->get("{$this->entity}/{$id}{$urlFilters}");
-
-
-            $responseData = collect(json_decode((string)$response->getBody()));
-
-            return new $this->model($this->request, $responseData->first());
-        } );
-    }
-
-    /**
-     * Create new resource and return created model
-     *
-     * @param $data
-     * @return mixed
-     * @throws \Rackbeat\Exceptions\RackbeatClientException
-     * @throws \Rackbeat\Exceptions\RackbeatRequestException
-     */
-    public function create( $data )
-    {
-        return $this->request->handleWithExceptions( function () use ( $data ) {
-
-            $response = $this->request->client->post("{$this->entity}", [
-                'json' => $data,
-            ]);
-
-
-            $responseData = collect(json_decode((string)$response->getBody()));
-
-            return new $this->model($this->request, $responseData->first());
-        } );
-    }
-
-    public function getEntity()
-    {
-        return $this->entity;
-    }
-
-    public function setEntity( $new_entity )
-    {
-        $this->entity = $new_entity;
-
-        return $this->entity;
-    }
+			/**
+			 * Default filters, limit must be always set last otherwise it will not work
+			 */
+			$filters[] = [ 'page', '=', $page ];
+			$filters[] = [ 'limit', '=', 1000 ];
+
+			$urlFilters = $this->parseFilters( $filters );
+
+			return $this->request->handleWithExceptions( function () use ( $urlFilters ) {
+
+				$response = $this->request->client->get( "{$this->entity}{$urlFilters}" );
+
+				$responseData = json_decode( (string) $response->getBody() );
+				$fetchedItems = collect( $responseData );
+				$items        = collect( [] );
+				$pages        = $responseData->pages;
+
+				foreach ( $fetchedItems->first() as $index => $item ) {
+					/** @var Model $model */
+					$modelClass = $this->getModelClass( $item );
+					$model      = new $modelClass( $this->request, $item );
+
+					$items->push( $model );
+				}
+
+				return (object) [
+
+					'items' => $items,
+					'pages' => $pages,
+				];
+			} );
+		};
+
+		do {
+
+			$resp = $response( $filters, $page );
+
+			$items = $items->merge( $resp->items );
+			$page++;
+			sleep( 2 );
+
+		} while ( $page <= $resp->pages );
+
+
+		return $items;
+
+	}
+
+	/**
+	 * Find single resource by its id filed, it also accepts query parameters
+	 *
+	 * @param       $id
+	 * @param array $filters
+	 *
+	 * @return mixed
+	 * @throws \Rackbeat\Exceptions\RackbeatClientException
+	 * @throws \Rackbeat\Exceptions\RackbeatRequestException
+	 */
+	public function find( $id, $filters = [] ) {
+		$urlFilters = $this->parseFilters( $filters );
+		$id         = rawurlencode( rawurlencode( $id ) );
+
+		return $this->request->handleWithExceptions( function () use ( $id, $urlFilters ) {
+			$response     = $this->request->client->get( "{$this->entity}/{$id}{$urlFilters}" );
+			$responseData = collect( json_decode( (string) $response->getBody() ) );
+			$modelClass   = $this->getModelClass( $responseData->first() );
+
+			return new $modelClass( $this->request, $responseData->first() );
+		} );
+	}
+
+	/**
+	 * Create new resource and return created model
+	 *
+	 * @param $data
+	 *
+	 * @return mixed
+	 * @throws \Rackbeat\Exceptions\RackbeatClientException
+	 * @throws \Rackbeat\Exceptions\RackbeatRequestException
+	 */
+	public function create( $data ) {
+		return $this->request->handleWithExceptions( function () use ( $data ) {
+
+			$response     = $this->request->client->post( "{$this->entity}", [
+				'json' => $data,
+			] );
+			$responseData = collect( json_decode( (string) $response->getBody() ) );
+			$modelClass   = $this->getModelClass( $responseData->first() );
+
+			return new $modelClass( $this->request, $responseData->first() );
+		} );
+	}
+
+	public function getEntity() {
+		return $this->entity;
+	}
+
+	public function setEntity( $new_entity ) {
+		$this->entity = $new_entity;
+
+		return $this->entity;
+	}
+
+	protected function getModelClass( $item ) {
+		return $this->model;
+	}
 }
