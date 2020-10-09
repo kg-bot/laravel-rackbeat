@@ -13,8 +13,13 @@ use Rackbeat\Utils\Model;
 
 class Webhook extends Model
 {
-	public    $number;
+	public    $id;
+	public    $event;
+	public    $url;
+	public    $is_active;
+	public    $created_at;
+	public    $updated_at;
 	protected $entity     = 'webhooks';
-	protected $primaryKey = 'number';
+	protected $primaryKey = 'id';
 	protected $modelClass = self::class;
 }
