@@ -1,112 +1,105 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nts
- * Date: 31.3.18.
- * Time: 17.03
- */
+
 
 namespace Rackbeat\Utils;
 
 
+use Illuminate\Support\Str;
+
 class Model
 {
-    protected $entity;
-    protected $primaryKey;
-    protected $url_friendly_id;
-    protected $modelClass = self::class;
-    protected $fillable   = [];
+	protected $entity;
+	protected $primaryKey;
+	protected $url_friendly_id;
+	protected $modelClass = self::class;
+	protected $fillable   = [];
 
-    /**
-     * @var Request
-     */
-    protected $request;
+	/**
+	 * @var Request
+	 */
+	protected $request;
 
-    public function __construct( Request $request, $data = [] )
-    {
-        $this->request = $request;
-        $data          = (array) $data;
+	public function __construct( Request $request, $data = [] ) {
+		$this->request = $request;
+		$data          = (array) $data;
 
-        foreach ( $data as $key => $value ) {
+		foreach ( $data as $key => $value ) {
 
-            $customSetterMethod = 'set' . ucfirst(\Str::camel($key)) . 'Attribute';
+			$customSetterMethod = 'set' . ucfirst( Str::camel( $key ) ) . 'Attribute';
 
-            if ( !method_exists( $this, $customSetterMethod ) ) {
+			if ( !method_exists( $this, $customSetterMethod ) ) {
 
-                $this->setAttribute( $key, $value );
+				$this->setAttribute( $key, $value );
 
-            } else {
+			} else {
 
-                $this->setAttribute( $key, $this->{$customSetterMethod}( $value ) );
-            }
-        }
-    }
+				$this->setAttribute( $key, $this->{$customSetterMethod}( $value ) );
+			}
+		}
+	}
 
-    protected function setAttribute( $attribute, $value )
-    {
-        if ($attribute === $this->primaryKey) {
+	protected function setAttribute( $attribute, $value ) {
+		if ($attribute === $this->primaryKey) {
 
-            $this->url_friendly_id = rawurlencode(rawurlencode($value));
-        }
+			$this->url_friendly_id = rawurlencode(rawurlencode($value));
+		}
 
-        $this->{$attribute} = $value;
+		$this->{$attribute} = $value;
 
-    }
+	}
 
-    public function __toString()
-    {
-        return json_encode( $this->toArray() );
-    }
+	public function __toString() {
+		return json_encode( $this->toArray() );
+	}
 
-    public function toArray()
-    {
-        $data       = [];
-        $class      = new \ReflectionObject( $this );
-        $properties = $class->getProperties( \ReflectionProperty::IS_PUBLIC );
+	public function toArray() {
+		$data       = [];
+		$class      = new \ReflectionObject( $this );
+		$properties = $class->getProperties( \ReflectionProperty::IS_PUBLIC );
 
-        /** @var \ReflectionProperty $property */
-        foreach ( $properties as $property ) {
+		foreach ( $properties as $property ) {
 
-            $data[ $property->getName() ] = $this->{$property->getName()};
-        }
+			$name          = $property->getName();
+			$data[ $name ] = $this->{$name};
+		}
 
-        return $data;
-    }
+		return $data;
+	}
 
-    public function delete()
-    {
-        return $this->request->handleWithExceptions( function () {
+	public function delete() {
+		return $this->request->handleWithExceptions( function () {
 
-            $response = $this->request->client->delete("{$this->entity}/{$this->url_friendly_id}");
+			$response = $this->request->client->delete("{$this->entity}/{$this->url_friendly_id}");
 
 
-            return json_decode((string)$response->getBody());
-        } );
-    }
+			return json_decode((string)$response->getBody());
+		} );
+	}
 
-    public function update( $data = [] )
-    {
+	public function update( $data = [] ) {
 
-        return $this->request->handleWithExceptions( function () use ( $data ) {
+		return $this->request->handleWithExceptions( function () use ( $data ) {
 
-            $response = $this->request->client->put("{$this->entity}/{$this->url_friendly_id}", [
-                'json' => $data,
-            ]);
+			$response = $this->request->client->put("{$this->entity}/{$this->url_friendly_id}", [
+				'json' => $data,
+			]);
 
 
-            $responseData = collect(json_decode((string)$response->getBody()));
+			$responseData = $this->getResponse( $response );
 
-            return new $this->modelClass($this->request, $responseData->first());
-        } );
-    }
+			return new $this->modelClass($this->request, $responseData->first());
+		} );
+	}
 
-    public function getEntity()
-    {
-        return $this->entity;
-    }
+	public function getEntity() {
+		return $this->entity;
+	}
 
-    public function setEntity( $new_entity )
-    {
-        $this->entity = $new_entity;
-    }
+	public function setEntity( $new_entity ) {
+		$this->entity = $new_entity;
+	}
+
+	protected function getResponse( $response ) {
+		return collect( json_decode( (string) $response->getBody() ) );
+	}
 }
