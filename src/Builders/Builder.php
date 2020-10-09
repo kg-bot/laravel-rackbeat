@@ -82,6 +82,7 @@ class Builder
 	 */
 	public function all( $filters = [] ) {
 		$page = 1;
+		$this->limit( 1000 );
 
 		$items = collect();
 

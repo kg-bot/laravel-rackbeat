@@ -21,7 +21,7 @@ trait ApiFiltering
 	protected function parseFilters( $filters = [] ) {
 
 		foreach ( $filters as $filter ) {
-			$this->where( array_values( $filter ) );
+			call_user_func_array( [ $this, 'where' ], array_values( $filter ) );
 		}
 
 
@@ -56,6 +56,18 @@ trait ApiFiltering
 	}
 
 	/**
+	 * Search for resources that only match your criteria, this method can be used in multiple ways
+	 * Example 1:
+	 * ->where('name', 'Test')
+	 *
+	 * Example 2:
+	 * ->where('name', '=', 'Test')
+	 *
+	 * Example 3:
+	 * ->where('is_active')
+	 *
+	 * If you use third example it will be sent as `is_active=true`
+	 *
 	 * @param string      $key
 	 * @param string|null $operator
 	 * @param mixed       $value
@@ -81,6 +93,8 @@ trait ApiFiltering
 	}
 
 	/**
+	 * How many resources we should load (max 1000, min 1)
+	 *
 	 * @param int $limit
 	 *
 	 * @return $this
@@ -98,6 +112,60 @@ trait ApiFiltering
 	 */
 	public function page( $page = 1 ): self {
 		$this->wheres['page'] = $page;
+
+		return $this;
+	}
+
+	/**
+	 * Set the return fields that you want
+	 *
+	 * @param array $fields
+	 *
+	 * @return $this
+	 */
+	public function fields( array $fields = [] ): self {
+		$this->wheres['fields'] = implode( ',', $fields );
+
+		return $this;
+	}
+
+	/**
+	 * What should be expanded (loaded) in relation to requested resource (only field_values for now)
+	 *
+	 * @param string $expand
+	 *
+	 * @return $this
+	 */
+	public function expand( string $expand = 'field_values' ): self {
+		$this->wheres['expand'] = $expand;
+
+		return $this;
+	}
+
+	/**
+	 * Search for exact field match, if you need to use starting_with match use ->field($id, $value)
+	 *
+	 * @param int $id
+	 * @param     $value
+	 *
+	 * @return $this
+	 */
+	public function fieldEq( int $id, $value ): self {
+		$this->wheres[ 'field_eq[' . $id . ']' ] = $value;
+
+		return $this;
+	}
+
+	/**
+	 * Search by field, this is not equal search so it can return more field, use ->fieldEq($id, $value) if you want to search for exact field
+	 *
+	 * @param int $id
+	 * @param     $value
+	 *
+	 * @return $this
+	 */
+	public function field( int $id, $value ): self {
+		$this->wheres[ 'field[' . $id . ']' ] = $value;
 
 		return $this;
 	}
