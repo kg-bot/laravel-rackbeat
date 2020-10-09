@@ -4,6 +4,8 @@
 namespace Rackbeat\Traits;
 
 
+use Rackbeat\Utils\Model;
+
 trait ApiFiltering
 {
 
@@ -18,7 +20,7 @@ trait ApiFiltering
 	 *
 	 * @return string
 	 */
-	protected function parseFilters( $filters = [] ) {
+	protected function parseFilters( array $filters = [] ): string {
 
 		foreach ( $filters as $filter ) {
 			call_user_func_array( [ $this, 'where' ], array_values( $filter ) );
@@ -99,8 +101,8 @@ trait ApiFiltering
 	 *
 	 * @return $this
 	 */
-	public function limit( $limit = 1000 ): self {
-		$this->wheres['limit'] = $limit;
+	public function limit( int $limit = 1000 ): self {
+		$this->where( 'limit', $limit );
 
 		return $this;
 	}
@@ -110,8 +112,8 @@ trait ApiFiltering
 	 *
 	 * @return $this
 	 */
-	public function page( $page = 1 ): self {
-		$this->wheres['page'] = $page;
+	public function page( int $page = 1 ): self {
+		$this->where( 'page', $page );
 
 		return $this;
 	}
@@ -124,7 +126,7 @@ trait ApiFiltering
 	 * @return $this
 	 */
 	public function fields( array $fields = [] ): self {
-		$this->wheres['fields'] = implode( ',', $fields );
+		$this->where( 'fields', implode( ',', $fields ) );
 
 		return $this;
 	}
@@ -137,7 +139,7 @@ trait ApiFiltering
 	 * @return $this
 	 */
 	public function expand( string $expand = 'field_values' ): self {
-		$this->wheres['expand'] = $expand;
+		$this->where( 'expand', $expand );
 
 		return $this;
 	}
@@ -151,7 +153,7 @@ trait ApiFiltering
 	 * @return $this
 	 */
 	public function fieldEq( int $id, $value ): self {
-		$this->wheres[ 'field_eq[' . $id . ']' ] = $value;
+		$this->where( 'field_eq[' . $id . ']', $value );
 
 		return $this;
 	}
@@ -165,8 +167,78 @@ trait ApiFiltering
 	 * @return $this
 	 */
 	public function field( int $id, $value ): self {
-		$this->wheres[ 'field[' . $id . ']' ] = $value;
+		$this->where( 'field[' . $id . ']', $value );
 
 		return $this;
+	}
+
+	/**
+	 * @param string $orderBy
+	 *
+	 * @return $this
+	 */
+	public function orderBy( string $orderBy ): self {
+		$this->where( 'order_by', $orderBy );
+
+		return $this;
+	}
+
+	/**
+	 * @param string $direction
+	 *
+	 * @return $this
+	 */
+	public function orderDirection( string $direction = 'DESC' ): self {
+		$this->where( 'order_direction', $direction );
+
+		return $this;
+	}
+
+	/**
+	 * @return $this
+	 */
+	public function orderDesc(): self {
+		$this->orderDirection( 'DESC' );
+
+		return $this;
+	}
+
+	/**
+	 * @return $this
+	 */
+	public function orderAsc(): self {
+		$this->orderDirection( 'ASC' );
+
+		return $this;
+	}
+
+	/**
+	 * Get first item ordered by desired field (or created_at by default)
+	 *
+	 * @param string $orderBy
+	 *
+	 * @return Model|null
+	 */
+	public function first( string $orderBy = 'created_at' ): ?Model {
+		$this->limit( 1 );
+		$this->orderBy( $orderBy );
+		$this->orderAsc();
+
+		return $this->get()->first();
+	}
+
+	/**
+	 * Get last created item ordered by desired field (or created_at by default)
+	 *
+	 * @param string $orderBy
+	 *
+	 * @return Model|null
+	 */
+	public function last( string $orderBy = 'created_at' ): ?Model {
+		$this->limit( 1 );
+		$this->orderBy( $orderBy );
+		$this->orderDesc();
+
+		return $this->get()->first();
 	}
 }
