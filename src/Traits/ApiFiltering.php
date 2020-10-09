@@ -4,6 +4,8 @@
 namespace Rackbeat\Traits;
 
 
+use Rackbeat\Utils\Model;
+
 trait ApiFiltering
 {
 
@@ -208,5 +210,31 @@ trait ApiFiltering
 		$this->orderDirection( 'ASC' );
 
 		return $this;
+	}
+
+	/**
+	 * Get first created item
+	 *
+	 * @return Model|null
+	 */
+	public function first(): ?Model {
+		$this->limit( 1 );
+		$this->orderBy( 'created_at' );
+		$this->orderAsc();
+
+		return $this->get()->first();
+	}
+
+	/**
+	 * Get last created item
+	 *
+	 * @return Model|null
+	 */
+	public function last(): ?Model {
+		$this->limit( 1 );
+		$this->orderBy( 'created_at' );
+		$this->orderDesc();
+
+		return $this->get()->first();
 	}
 }
