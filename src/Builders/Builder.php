@@ -86,10 +86,6 @@ class Builder
 		$items = collect();
 
 		$response = function ( $filters, $page ) {
-
-			/**
-			 * Default filters, limit must be always set last otherwise it will not work
-			 */
 			$this->page( $page );
 
 			$urlFilters = $this->parseFilters( $filters );
