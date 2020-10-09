@@ -191,4 +191,22 @@ trait ApiFiltering
 
 		return $this;
 	}
+
+	/**
+	 * @return $this
+	 */
+	public function orderDesc(): self {
+		$this->orderDirection( 'DESC' );
+
+		return $this;
+	}
+
+	/**
+	 * @return $this
+	 */
+	public function orderAsc(): self {
+		$this->orderDirection( 'ASC' );
+
+		return $this;
+	}
 }
