@@ -213,26 +213,30 @@ trait ApiFiltering
 	}
 
 	/**
-	 * Get first created item
+	 * Get first item ordered by desired field (or created_at by default)
+	 *
+	 * @param string $orderBy
 	 *
 	 * @return Model|null
 	 */
-	public function first(): ?Model {
+	public function first( string $orderBy = 'created_at' ): ?Model {
 		$this->limit( 1 );
-		$this->orderBy( 'created_at' );
+		$this->orderBy( $orderBy );
 		$this->orderAsc();
 
 		return $this->get()->first();
 	}
 
 	/**
-	 * Get last created item
+	 * Get last created item ordered by desired field (or created_at by default)
+	 *
+	 * @param string $orderBy
 	 *
 	 * @return Model|null
 	 */
-	public function last(): ?Model {
+	public function last( string $orderBy = 'created_at' ): ?Model {
 		$this->limit( 1 );
-		$this->orderBy( 'created_at' );
+		$this->orderBy( $orderBy );
 		$this->orderDesc();
 
 		return $this->get()->first();
