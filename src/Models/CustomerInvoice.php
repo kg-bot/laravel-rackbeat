@@ -27,38 +27,38 @@ class CustomerInvoice extends Model
 	 *                               [
 	 *                               "send" => false,
 	 *                               "body" => "Something",
-     *     "subject" => "YOUR SUBJECT",
-     *     "receivers" => [
-     *         "to" => [ "email@here.com"],
-     *         "cc" => ["cc-email@here.com"],
-     *         "bcc" => ["bcc1-email@here.com", "bcc2@here.com"]
-     *     ]
-     * ]
-     * If you set send to false or use ->book(true) email body won't be included
-     * </p>
-     * @return mixed
-     * @throws \Rackbeat\Exceptions\RackbeatClientException
-     * @throws \Rackbeat\Exceptions\RackbeatRequestException
-     */
-    public function book($send_email = false)
-    {
-        return $this->request->handleWithExceptions(function () use ($send_email) {
+	 *                               "subject" => "YOUR SUBJECT",
+	 *                               "receivers" => [
+	 *                               "to" => [ "email@here.com"],
+	 *                               "cc" => ["cc-email@here.com"],
+	 *                               "bcc" => ["bcc1-email@here.com", "bcc2@here.com"]
+	 *                               ]
+	 *                               ]
+	 *                               If you set send to false or use ->book(true) email body won't be included
+	 *                               </p>
+	 * @param bool       $suppress_webhooks
+	 *
+	 * @return mixed
+	 * @throws \Rackbeat\Exceptions\RackbeatClientException
+	 * @throws \Rackbeat\Exceptions\RackbeatRequestException
+	 */
+	public function book( $send_email = false, bool $suppress_webhooks = false ) {
+		return $this->request->handleWithExceptions( function () use ( $send_email, $suppress_webhooks ) {
 
-            $query = '';
-            $body = [];
+			$query = '';
+			$body  = [
+				'suppress_webhooks' => $suppress_webhooks
+			];
 
-            if (is_bool($send_email)) {
+			if ( is_bool( $send_email ) ) {
 
-                $query = ($send_email === true) ? '?send_mail=true' : '';
-            } else if (is_array($send_email)) {
+				$query = ( $send_email === true ) ? '?send_mail=true' : '';
+			} else if ( is_array( $send_email ) ) {
 
-                $body = [
+				$body['mail'] = $send_email;
+			}
 
-                    'mail' => $send_email,
-                ];
-            }
-
-            $response = $this->request->client->post("{$this->entity}/{$this->url_friendly_id}/book" . $query, [
+			$response = $this->request->client->post( "{$this->entity}/{$this->url_friendly_id}/book" . $query, [
                 'json' => $body,
             ]);
 
