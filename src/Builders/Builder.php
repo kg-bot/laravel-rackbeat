@@ -114,7 +114,6 @@ class Builder
 
 			$items = $items->merge( $resp->items );
 			$page++;
-			sleep( 2 );
 
 		} while ( $page <= $resp->pages );
 
