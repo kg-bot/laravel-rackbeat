@@ -101,7 +101,6 @@ class Builder
 				$items        = $this->populateModelsFromResponse( $fetchedItems->first() );
 
 				return (object) [
-
 					'items' => $items,
 					'pages' => $pages,
 				];
@@ -119,7 +118,60 @@ class Builder
 
 
 		return $items;
+	}
 
+	/**
+	 * It will iterate over all pages until it does not receive empty response, you can also set query parameters,
+	 * Return a Generator that you' handle first before quering the next offset
+	 *
+	 * @param int $chunkSize
+	 *
+	 * @return Generator
+	 */
+	public function allWithGenerator(int $chunkSize = 50)
+	{
+		$page = 1;
+		$this->limit($chunkSize);
+
+		$items = collect();
+
+		$response = function ($page) {
+			$this->page($page);
+			$urlFilters = $this->parseFilters();
+
+			return $this->request->handleWithExceptions(function () use ($urlFilters) {
+				$response = $this->request->client->get("{$this->entity}{$urlFilters}");
+
+				$responseData = json_decode((string) $response->getBody());
+				$fetchedItems = $this->getResponse($response);
+				$pages        = $responseData->pages;
+				$items        = $this->populateModelsFromResponse($fetchedItems->first());
+
+				return (object) [
+					'items' => $items,
+					'pages' => $pages,
+				];
+			});
+		};
+
+		do {
+			$resp = $response($page);
+
+			$countResults = count($resp->items);
+			if ($countResults === 0) {
+				break;
+			}
+			// make a generator of the results and return them
+			// so the logic will handle them before the next iteration
+			// in order to avoid memory leaks
+			foreach ($resp->items as $result) {
+				yield $result;
+			}
+
+			unset($resp);
+
+			$page++;
+		} while ($countResults === $chunkSize);
 	}
 
 	/**
