@@ -10,7 +10,7 @@
   ],
   "require": {
 	  "php": ">=7.1",
-	  "laravel/framework": "^5.5|^6|^7",
+	  "laravel/framework": "^5.5|^6|^7|^8",
 	  "guzzlehttp/guzzle": "*",
 	  "ext-json": "*",
 	  "spatie/guzzle-rate-limiter-middleware": "^1.0"

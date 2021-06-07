@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Rackbeat\Traits\ApiFiltering;
 use Rackbeat\Utils\Model;
 use Rackbeat\Utils\Request;
+use Illuminate\Support\Str;
 
 
 class Builder
@@ -80,46 +81,106 @@ class Builder
 	 *
 	 * @return mixed
 	 */
-	public function all( $filters = [] ) {
-		$page = 1;
-		$this->limit( 1000 );
+	public function all( $filters = [], $chunkSize = 100 ) {
+		$entity = Str::plural($this->entity);
+		$offset = 0;
 
-		$items = collect();
-
-		$response = function ( $filters, $page ) {
-			$this->page( $page );
+		$response = function ( $filters, $offset, $entity ) use ($chunkSize){
+			$filters['limit'] = $chunkSize;
+			$filters['offset'] = $offset;
 
 			$urlFilters = $this->parseFilters( $filters );
 
-			return $this->request->handleWithExceptions( function () use ( $urlFilters ) {
-
+			return $this->request->handleWithExceptions( function () use ( $urlFilters, $entity ) {
 				$response = $this->request->client->get( "{$this->entity}{$urlFilters}" );
-
 				$responseData = json_decode( (string) $response->getBody() );
-				$fetchedItems = $this->getResponse( $response );
-				$pages        = $responseData->pages;
-				$items        = $this->populateModelsFromResponse( $fetchedItems->first() );
+				$fetchedItems = collect($responseData->{$entity});
+				$items = collect([]);
+				$count = (isset($responseData->paging)) ? $responseData->paging->count : 0;
 
+				foreach ($fetchedItems as $index => $item) {
+					/** @var Model $model */
+					$model = new $this->model($this->request, $item);
+					$items->push($model);
+				}
 				return (object) [
-
 					'items' => $items,
-					'pages' => $pages,
+					'count' => $count,
 				];
 			} );
 		};
 
 		do {
 
-			$resp = $response( $filters, $page );
+			$resp = $response( $filters, $offset, $entity );
 
-			$items = $items->merge( $resp->items );
+			$countResults = count($resp->items);
+			if ( $countResults === 0 ) {
+				break;
+			}
+			foreach ($resp->items as $result ) {
+				yield $result;
+			}
+
+			unset( $resp );
+
+			$offset += $chunkSize;
+
+		} while ( $countResults === $chunkSize );
+	}
+
+	/**
+	 * It will iterate over all pages until it does not receive empty response, you can also set query parameters,
+	 * Return a Generator that you' handle first before quering the next offset
+	 *
+	 * @param int $chunkSize
+	 *
+	 * @return Generator
+	 */
+	public function allWithGenerator(int $chunkSize = 50)
+	{
+		$page = 1;
+		$this->limit($chunkSize);
+
+		$items = collect();
+
+		$response = function ($page) {
+			$this->page($page);
+			$urlFilters = $this->parseFilters();
+
+			return $this->request->handleWithExceptions(function () use ($urlFilters) {
+				$response = $this->request->client->get("{$this->entity}{$urlFilters}");
+
+				$responseData = json_decode((string) $response->getBody());
+				$fetchedItems = $this->getResponse($response);
+				$pages        = $responseData->pages;
+				$items        = $this->populateModelsFromResponse($fetchedItems->first());
+
+				return (object) [
+					'items' => $items,
+					'pages' => $pages,
+				];
+			});
+		};
+
+		do {
+			$resp = $response($page);
+
+			$countResults = count($resp->items);
+			if ($countResults === 0) {
+				break;
+			}
+			// make a generator of the results and return them
+			// so the logic will handle them before the next iteration
+			// in order to avoid memory leaks
+			foreach ($resp->items as $result) {
+				yield $result;
+			}
+
+			unset($resp);
+
 			$page++;
-
-		} while ( $page <= $resp->pages );
-
-
-		return $items;
-
+		} while ($countResults === $chunkSize);
 	}
 
 	/**
