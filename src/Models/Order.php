@@ -16,6 +16,7 @@ use Rackbeat\Utils\Model;
 
 class Order extends Model
 {
+	public $shipment_id;
 	protected $entity     = 'orders';
 	protected $primaryKey = 'number';
 	protected $modelClass = self::class;
