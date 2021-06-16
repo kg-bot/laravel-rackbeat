@@ -20,17 +20,20 @@ class CustomerInvoiceBuilder extends Builder
      * Mark invoice as booked
      *
      * @param $number
+     * @param array $data
      *
      * @return mixed
      * @throws \Rackbeat\Exceptions\RackbeatClientException
      * @throws \Rackbeat\Exceptions\RackbeatRequestException
      */
-    public function markBook( $number )
+    public function markBook( $number, array $data = [] )
     {
-        return $this->request->handleWithExceptions( function () use ( $number ) {
+        return $this->request->handleWithExceptions( function () use ( $number, $data ) {
 
-            $response     = $this->request->client->post( $this->entity . '/' . $number . '/book' );
+            $response     = $this->request->client->post( $this->entity . '/' . $number . '/book' , [
+                'json' => $data,
+            ]);
             $responseData = $this->getResponse( $response );
         } );
-    }    
+    } 
 }
