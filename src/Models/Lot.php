@@ -27,18 +27,29 @@ class Lot extends Model
 			return json_decode( (string) $response->getBody() );
 		} );
     }
+	
+    public function location($number = null) {
+	return $this->request->handleWithExceptions(function () use ($number) {
 
-    public function location()
-    {
-        return $this->request->handleWithExceptions( function () {
-
-            $response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/locations");
+		$response = $this->request->client->get("{$this->entity}/{$this->url_friendly_id}/locations" . (($number !== null) ? '/' . $number : ''));
 
 
-            return collect(json_decode((string)$response->getBody())->lot_locations);
+		$response = json_decode((string)$response->getBody());
 
-        } );
-    }
+		if (isset($response->lot_locations)) {
+
+			return collect($response->lot_locations);
+		} else if (isset($response->lot_location)) {
+
+			return $response->lot_location;
+		} else {
+
+			return $response;
+		}
+
+
+	} );
+}	
 
     /**
      * Show reporting ledger for desired product https://app.rackbeat.com/reporting/ledger/{product_number}
