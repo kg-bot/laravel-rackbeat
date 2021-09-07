@@ -19,6 +19,7 @@ use Rackbeat\Builders\LineableBuilder;
 use Rackbeat\Builders\LocationBuilder;
 use Rackbeat\Builders\LotBuilder;
 use Rackbeat\Builders\OrderBuilder;
+use Rackbeat\Builders\OrderNoteBuilder;
 use Rackbeat\Builders\OrderShipmentBuilder;
 use Rackbeat\Builders\PaymentTermBuilder;
 use Rackbeat\Builders\PluginBuilder;
@@ -126,6 +127,14 @@ class Rackbeat
     public function orders()
     {
         return new OrderBuilder( $this->request );
+    }
+
+        /**
+     * @return \Rackbeat\Builders\OrderBuilder
+     */
+    public function orderNotes()
+    {
+        return new OrderNoteBuilder( $this->request );
     }
 
     /**
