@@ -27,9 +27,9 @@ use Rackbeat\Builders\ProductBuilder;
 use Rackbeat\Builders\ProductGroupBuilder;
 use Rackbeat\Builders\ProductionOrderBuilder;
 use Rackbeat\Builders\PurchaseOrderBuilder;
-use Rackbeat\Builders\PurchaseOrderReceiptBuilder;
 use Rackbeat\Builders\SettingsBuilder;
 use Rackbeat\Builders\SupplierBuilder;
+use Rackbeat\Builders\SupplierContactBuilder;
 use Rackbeat\Builders\SupplierGroupBuilder;
 use Rackbeat\Builders\SupplierInvoiceBuilder;
 use Rackbeat\Builders\Variation\VariationBuilder;
@@ -130,7 +130,7 @@ class Rackbeat
     }
 
         /**
-     * @return \Rackbeat\Builders\OrderBuilder
+     * @return \Rackbeat\Builders\OrderNoteBuilder
      */
     public function orderNotes()
     {
@@ -285,6 +285,15 @@ class Rackbeat
      */
     public function customer_contacts() {
 	    return new CustomerContactBuilder( $this->request );
+    }
+    
+    /**
+     * This resource requires you to do $builder->setEntity and to replace {supplier} in it with desired supplier, otherwise it won't work
+     *
+     * @return SupplierContactBuilder
+     */
+    public function supplier_contacts() {
+        return new SupplierContactBuilder( $this->request );
     }
 
 	/**
